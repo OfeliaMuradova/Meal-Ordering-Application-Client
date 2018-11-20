@@ -1,4 +1,4 @@
-# vue-ts-test
+# Food Ordering Front
 
 ## Project setup
 ```
