@@ -1,6 +1,6 @@
 {
-  "name": "vue-ts-test",
-  "short_name": "vue-ts-test",
+  "name": "FoodOrderingFront",
+  "short_name": "FOF",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
