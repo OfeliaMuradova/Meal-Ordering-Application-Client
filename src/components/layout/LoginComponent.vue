@@ -15,7 +15,7 @@
 
                 <div class="form-label-group">
                    <label for="inputPassword">Password</label>
-                   <input type="password" v-bind="password" id="inputPassword" class="form-control" >
+                   <input type="password" id="inputPassword" class="form-control" >
                 </div>
 
                 <div class="custom-control custom-checkbox mb-3">
@@ -23,7 +23,7 @@
                   <label class="custom-control-label" for="customCheck1">Remember me</label>
                 </div>
 
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login" type="button">Sign in</button>
               </form>
 
             </div>
@@ -39,35 +39,56 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import ajax from 'jquery'
 import axios from 'axios'
 
 @Component({})
 export default class LoginComponent extends Vue{
   private username: string;
   private password: string;
+
   private rememberMeChecked: boolean;
 
   private login() {
+
     var params = new URLSearchParams();
     params.append('grant_type', 'password');
     params.append('username', 'user');
-    params.append('password', 'admin');
+    params.append('password', 'password');
 
-    axios({
-        method:'post',
-        url:'generate-token/token',
-        auth: {username: '', password: ''},
-        headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"},
-        data: params
-    }).then( (response) => {
-        this.set_cookie("access_token", response.data.access_token);
-        document.location.replace("/");
+    var data = {
+      username: "usr",
+      password: "admin"
+    }
+    
+    axios.post('http://localhost:8080/token/generate-token', data, {
+       headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+             'Access-Control-Allow-Origin': '*',
+             'crossDomain': true
+         }
+      }).then( (response: any) => {
+          debugger;
+      
+          this.set_cookie("access_token", response.data.token);
+          document.location.replace("/logged");
+          console.log(this.getCookie("access_token"));
+      })
+      .catch((error: any) => {
+        console.log(error.response)
     });
 
   }
 
   set_cookie(name:string, value:string) {
     document.cookie = name +'='+ value +'; Path=/;';
+  }
+
+  getCookie(name:string) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
   }
 
 }
