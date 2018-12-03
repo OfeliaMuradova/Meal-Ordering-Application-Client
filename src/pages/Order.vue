@@ -12,9 +12,8 @@
               Select week
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <button class="dropdown-item" type="button">Action</button>
-              <button class="dropdown-item" type="button">Another action</button>
-              <button class="dropdown-item" type="button">Something else here</button>
+              <button class="dropdown-item" type="button">week num</button>
+              <button class="dropdown-item" type="button">week num</button>
             </div>
           </div>
         </div>
@@ -41,22 +40,30 @@
                 <tr>
                   <th scope="row">Dienstag</th>
                   <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>Thornton</td>
+                  <td>
+                    <a href="" target="_blank"> Menu </a>  
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Mittwoch</th>
                   <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>the Bird</td>
+                  <td>
+                    <a href="" target="_blank"> Menu </a>  
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Donnerstag</th>
                   <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>the Bird</td>
+                  <td>
+                    <a href="" target="_blank"> Menu </a>  
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Freitag</th>
                   <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>the Bird</td>
+                  <td>
+                    <a href="" target="_blank"> Menu </a>  
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -73,6 +80,8 @@ import Component from 'vue-class-component'
 
 @Component({})
 export default class Order extends Vue{
+
+
 
   private placeOrder(){
 

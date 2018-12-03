@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import Order from '@/pages/Order.vue'
+import Menus from '@/pages/Menus.vue'
 import Profile from '@/components/ui-elements/Profile.vue'
 import Slider from '@/components/ui-elements/Slider.vue'
 
@@ -31,6 +32,11 @@ export default new Router({
           path: '/:page',
           name: 'contact',
           component: Profile,
+        },
+        {
+          path: '/menus',
+          name: 'menus',
+          component: Menus,
         },
         {
           path: '/order',

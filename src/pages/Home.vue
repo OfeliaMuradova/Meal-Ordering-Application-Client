@@ -14,7 +14,7 @@
 						<router-link :to="{ name: 'slider'}" tag="li" active-class="nav-item active">
 							<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 						</router-link>
-						<router-link :to="{ path: '/menus'}" tag="li" active-class="nav-item">
+						<router-link :to="{ name: 'menus'}" tag="li" active-class="nav-item">
 							<a class="nav-link" href="#">Menus</a>
 						</router-link>
 						<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
