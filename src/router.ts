@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/pages/Home.vue'
-import LoginComponent from '@/components/layout/LoginComponent.vue'
+import Login from '@/pages/Login.vue'
+import Order from '@/pages/Order.vue'
+import Profile from '@/components/ui-elements/Profile.vue'
+import Slider from '@/components/ui-elements/Slider.vue'
 
 Vue.use(Router)
 
@@ -11,14 +14,34 @@ export default new Router({
     {
       path: '/',
       name: 'login',
-      component: LoginComponent
+      component: Login
     },
     {
       path: '/home',
-      name: 'home',
+      //name: 'home',
       component: Home,
+      //props: true,
       children: [
-        //{ path: '', component: UserHome },
+        {
+          path: '/:page',
+          name: 'profile',
+          component: Profile,
+        },
+        {
+          path: '/:page',
+          name: 'contact',
+          component: Profile,
+        },
+        {
+          path: '/order',
+          name: 'order',
+          component: Order,
+        },
+        {
+          path: '',
+          name: 'slider',
+          component: Slider
+        }
       ]
     }
     

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     
-    <router-view></router-view>
+    <Login></Login>
 
   </div>
 </template>
@@ -10,8 +10,11 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import Login from '@/pages/Login.vue'
 
-@Component({})
+@Component({
+  components: { Login }
+})
 export default class App extends Vue{
   
 }
@@ -19,8 +22,10 @@ export default class App extends Vue{
 
 
 <style lang="scss">
+@import "@/styles/variables.scss";
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: $font-default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

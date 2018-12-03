@@ -1,6 +1,7 @@
 <template>
   <div class="login">
-    <div class="container">
+
+    <div v-if="!logged" class="container">
       <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
@@ -25,15 +26,20 @@
 
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login" type="button">Sign in</button>
               </form>
-
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</template>
 
+    <router-view v-if="logged"></router-view>
+
+
+  </div>
+
+
+
+</template>
 
 
 <script lang="ts">
@@ -42,14 +48,13 @@ import Component from 'vue-class-component'
 import axios from 'axios'
 
 @Component({})
-export default class LoginComponent extends Vue{
+export default class Login extends Vue{
   private username: string = '';
   private password : string = '';
   private rememberMeChecked: boolean = false;
+  private logged: boolean = false;
 
   private login() {
-
-debugger;
  
     var data = {
       //username: this.username,
@@ -66,8 +71,9 @@ debugger;
              'crossDomain': true
          }
       }).then( (response: any) => {
+          this.logged = true;
           this.set_cookie("access_token", response.data.token);
-          this.$router.replace({ name: "home" });
+          this.$router.replace({ name: "slider" });
           console.log(this.getCookie("access_token"));
       })
       .catch((error: any) => {
