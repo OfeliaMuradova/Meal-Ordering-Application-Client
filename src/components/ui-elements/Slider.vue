@@ -1,4 +1,5 @@
 <template>
+<div>
   <div id="carouselSlider" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
@@ -25,16 +26,70 @@
       <span class="sr-only">Next</span>
     </a>
   </div>
+
+  <button type="button" v-on:click="callTest()">CLICK HERE</button>
+
+</div>
 </template>
 
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import axios from 'axios'
 
 @Component({})
 export default class Slider extends Vue{
   
+  headers = {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+             'Access-Control-Allow-Origin': '*',
+             'Authorization': 'Bearer' + this.getCookie('access_token'),
+             'crossDomain': true,
+             'jemala': 'aeee'
+         }
+
+  private callTest(){
+    debugger;
+    axios.defaults.headers.common['Authorization'] = 'sgdrgdr'
+    console.log(axios.defaults.headers);
+    // axios.get('http://localhost:8080/test', { headers: this.headers })
+    // .then( (response: any) => {
+    //       this.set_cookie("access_token", response.data.token);
+    //       this.$router.replace({ name: "slider" });
+    //       console.log(this.getCookie("access_token"));
+    //   })
+    //   .catch((error: any) => {
+    //     console.log(error.response)
+    // });
+
+    axios({
+      method: 'get',
+      url: 'http://localhost:8080/test',
+      headers: this.headers
+  }).then( (response: any) => {
+          this.set_cookie("access_token", response.data.token);
+          this.$router.replace({ name: "slider" });
+          console.log(this.getCookie("access_token"));
+      })
+      .catch((error: any) => {
+        console.log(error.response)
+    });
+
+  }
+
+  set_cookie(name:string, value:string) {
+    document.cookie = name +'='+ value +'; Path=/;';
+  }
+
+  getCookie(name:string) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+  }
+
+
 }
 </script>
 

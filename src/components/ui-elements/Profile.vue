@@ -37,7 +37,7 @@ export default class Profile extends Vue{
 
   private showEditButton = false;
   
-  
+  /*
   mounted(){
     debugger;
     this.$root.$on('managePages', (user: {}, showEditButton: boolean ) => {
@@ -45,6 +45,7 @@ export default class Profile extends Vue{
       this.user = user;
     });
   }
+  */
   
 
   

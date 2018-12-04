@@ -52,7 +52,7 @@ export default class Login extends Vue{
   private username: string = '';
   private password : string = '';
   private rememberMeChecked: boolean = false;
-  private logged: boolean = false;
+  public logged: boolean = false;
 
   private login() {
  
@@ -63,7 +63,7 @@ export default class Login extends Vue{
       password: 'kuku'
     }
 
-    axios.post('http://localhost:8080/token/generate-token', data, {
+    axios.post('http://localhost:8080/login', data, {
        headers: {
              'Accept': 'application/json',
              'Content-Type': 'application/json',
