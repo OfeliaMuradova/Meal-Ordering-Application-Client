@@ -4,53 +4,94 @@ import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import Order from '@/pages/Order.vue'
 import Menus from '@/pages/Menus.vue'
-import Profile from '@/components/ui-elements/Profile.vue'
-import Slider from '@/components/ui-elements/Slider.vue'
+import Profile from '@/components/Profile.vue'
+import Slider from '@/components/Slider.vue'
 
 Vue.use(Router)
 
-export default new Router({
-  //mode: "history",
+var loggedIn: boolean;
+checkAuth();
+
+let router = new Router({
+  mode: 'history',
   routes: [
-    {
-      path: '/',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/home',
-      //name: 'home',
-      component: Home,
-      children: [
-        {
-          path: '/:page',
-          name: 'profile',
-          component: Profile,
-        },
-        {
-          path: '/:page',
-          name: 'contact',
-          component: Profile,
-        },
-        {
-          path: '/menus',
-          name: 'menus',
-          component: Menus,
-        },
-        {
-          path: '/order',
-          name: 'order',
-          component: Order,
-        },
-        {
-          path: '',
-          name: 'slider',
-          component: Slider
+      {
+          path: '/',
+          component: Home,
+          meta: { 
+            requiresAuth: true
+          },
+          children: [
+            {
+              path: '',
+              name: 'slider',
+              component: Slider,
+              meta: { 
+                requiresAuth: true
+              }
+            },
+            {
+              path: '/menus',
+              name: 'menus',
+              component: Menus,
+              meta: { 
+                requiresAuth: true
+              }
+            },
+            {
+              path: '/order',
+              name: 'order',
+              component: Order,
+              meta: { 
+                requiresAuth: true
+              }
+            }
+          ]
+      },
+      {
+          path: '/login',
+          name: 'login',
+          component: Login,
+          meta: { 
+            requiresAuth: false
+          }
+      }
+  ]
+});
+
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
+    checkAuth();
+
+    next({ path: '/login', query: { redirect: to.fullPath }});
+  } else {
+    next();
+  }
+});
+
+
+  function checkAuth(){
+    var token = "";
+    var value = "; " + document.cookie;
+      var cookies = value.split("; ");
+      cookies.forEach((cookie: string) => {
+        if(cookie.startsWith("access_token")){
+          var parts = cookie.split("=");
+          console.log(parts[1]);
+          token = parts[1];
         }
-      ]
-    }
-    
-    
+    });
+
+    //todo: checktoken and if the token is valid
+    if(token)
+      loggedIn = true;
+  }
+
+
+
+export default router
+
     /*,
     {
       path: '/logged',
@@ -59,6 +100,6 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import( './components/layout/Logged.vue')
     }
-    */
+    
   ]
-})
+})*/

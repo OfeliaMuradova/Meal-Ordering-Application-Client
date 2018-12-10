@@ -41,37 +41,21 @@ import axios from 'axios'
 @Component({})
 export default class Slider extends Vue{
   
-  headers = {
+  private callTest(){
+    debugger;
+    //axios.defaults.headers.common['Authorization'] = 'common';
+    //console.log(axios.defaults.headers);
+    axios.get('http://localhost:8080/companies/list', {
+       headers: {
              'Accept': 'application/json',
              'Content-Type': 'application/json',
              'Access-Control-Allow-Origin': '*',
-             'Authorization': 'Bearer' + this.getCookie('access_token'),
+             'Access-Control-Allow-Headers': 'Content-Type',
              'crossDomain': true,
-             'jemala': 'aeee'
+             'Authorization': 'Bearer' + this.getCookie('access_token')
          }
-
-  private callTest(){
-    debugger;
-    axios.defaults.headers.common['Authorization'] = 'sgdrgdr'
-    console.log(axios.defaults.headers);
-    // axios.get('http://localhost:8080/test', { headers: this.headers })
-    // .then( (response: any) => {
-    //       this.set_cookie("access_token", response.data.token);
-    //       this.$router.replace({ name: "slider" });
-    //       console.log(this.getCookie("access_token"));
-    //   })
-    //   .catch((error: any) => {
-    //     console.log(error.response)
-    // });
-
-    axios({
-      method: 'get',
-      url: 'http://localhost:8080/test',
-      headers: this.headers
-  }).then( (response: any) => {
-          this.set_cookie("access_token", response.data.token);
-          this.$router.replace({ name: "slider" });
-          console.log(this.getCookie("access_token"));
+      }).then( (response: any) => {
+          console.log("request sent successfully");
       })
       .catch((error: any) => {
         console.log(error.response)

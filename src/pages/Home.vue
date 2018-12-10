@@ -20,9 +20,9 @@
 						<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
 							<a class="nav-link" href="#">Order</a>
 						</router-link>
-						<router-link :to="{ path: '/contact', params: { page: 'contact' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
+						<!--<router-link :to="{ path: '/contact', params: { page: 'contact' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
 							<a class="nav-link" href="#">Contact</a>
-						</router-link>
+						</router-link>-->
 					</ul>
 
 					<ul class="navbar-nav ml-auto" id="bootstrap-overrides-right">
@@ -31,11 +31,11 @@
 								<img id="cart" src="@/assets/cart.png">
 								</a>
 							</router-link>
-							<router-link :to="{ path: '/profile', params: { page: 'profile' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
+							<!--<router-link :to="{ path: '/profile', params: { page: 'profile' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
 								<a class="nav-link" href="#">Profile
 								<img id="cart" src="@/assets/avatar.png">
 								</a>
-							</router-link>
+							</router-link>-->
 							<router-link :to="{ path: '/login'}" tag="li" v-on:click.native="logout()" active-class="nav-item">
 								<a class="nav-link" href="#">Logout
 									<img id="cart" src="@/assets/logout.png">
@@ -50,7 +50,6 @@
 
 	</div>
 </template>
-
 
 
 <script lang="ts">
@@ -76,7 +75,7 @@ export default class Home extends Vue{
 		this.user.location = 'Chemnitz, Germany';
   }
 
-  private managePages() {
+  /*private managePages() {
     if(this.$route.params.page == "contact"){
 			this.showEditButton = false;
 		}
@@ -84,26 +83,14 @@ export default class Home extends Vue{
 			this.showEditButton = true;
 
 		this.$root.$emit('managePages', this.user, this.showEditButton);
-  }
-
-  /*private logout() {
-    axios.delete('http://localhost:8080/logout')
-          .then((response: any) => {
-            //this.logged = false;
-            this.$router.replace({ name: "login" });
-            this.delete_cookie('access_token');
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });
-  }*/
+	}
+	*/
 
   private logout() {
     debugger;
     try{
-      //this.logged = false;
-      this.delete_cookie('access_token');
-      this.$router.replace({ name: "login" });
+			this.delete_cookie('access_token');
+      this.$router.replace({ path: "/login" });
     }
     catch(error) {
       console.log(error.response)
@@ -112,17 +99,8 @@ export default class Home extends Vue{
 
   delete_cookie(name:string) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    console.log(this.getCookie(name));
-    console.log(document.cookie);
   }
 
-  getCookie(name:string): string {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) 
-    return parts.pop().split(";").shift();
-  }
-		
 }
 </script>
 

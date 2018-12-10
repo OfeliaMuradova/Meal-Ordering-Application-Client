@@ -1,7 +1,7 @@
 <template>
   <div class="login">
 
-    <div v-if="!logged" class="container">
+    <div class="container">
       <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
@@ -11,7 +11,7 @@
               <form class="form-signin" method="post" action="login" >
                 <div class="form-label-group">
                   <label for="inputEmail">Username</label>
-                  <input type="text" id="inputEmail" class="form-control"  autofocus>  <!--v-model="username"-->
+                  <input type="text" id="inputEmail" class="form-control" autofocus>  <!--v-model="username"-->
                 </div>
 
                 <div class="form-label-group">
@@ -32,9 +32,6 @@
       </div>
     </div>
 
-    <router-view v-if="logged"></router-view>
-
-
   </div>
 
 
@@ -52,26 +49,27 @@ export default class Login extends Vue{
   private username: string = '';
   private password : string = '';
   private rememberMeChecked: boolean = false;
-  public logged: boolean = false;
+
 
   private login() {
  
     var data = {
       //username: this.username,
       //password: this.password
-      username: 'usr',
-      password: 'kuku'
+      username: 'admin',
+      password: 'admin'
     }
 
+    debugger;
     axios.post('http://localhost:8080/login', data, {
        headers: {
              'Accept': 'application/json',
              'Content-Type': 'application/json',
              'Access-Control-Allow-Origin': '*',
-             'crossDomain': true
+             'crossDomain': true,
          }
       }).then( (response: any) => {
-          this.logged = true;
+          debugger;
           this.set_cookie("access_token", response.data.token);
           this.$router.replace({ name: "slider" });
           console.log(this.getCookie("access_token"));
@@ -94,7 +92,6 @@ export default class Login extends Vue{
 
 }
 </script>
-
 
 
 <style scoped lang="scss">
