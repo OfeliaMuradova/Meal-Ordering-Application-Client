@@ -26,12 +26,12 @@
 					</ul>
 
 					<ul class="navbar-nav ml-auto" id="bootstrap-overrides-right">
-							<router-link :to="{ path: '/my-orders'}" tag="li" active-class="nav-item">
+							<!--<router-link :to="{ path: '/my-orders'}" tag="li" active-class="nav-item">
 								<a class="nav-link" href="#">Shopping cart
 								<img id="cart" src="@/assets/cart.png">
 								</a>
 							</router-link>
-							<!--<router-link :to="{ path: '/profile', params: { page: 'profile' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
+							<router-link :to="{ path: '/profile', params: { page: 'profile' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
 								<a class="nav-link" href="#">Profile
 								<img id="cart" src="@/assets/avatar.png">
 								</a>
@@ -120,10 +120,8 @@ export default class Home extends Vue{
 	}
 }
 
-#nav-b-override{
-	.nav-link{
-		font-size: 18px;
-	}
+.nav-link{
+	font-size: 18px;
 }
 
 @media only screen and (max-width: 959px) {}

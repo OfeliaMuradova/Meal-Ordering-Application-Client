@@ -10,11 +10,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import Login from '@/pages/Login.vue'
 
-@Component({
-  components: { Login }
-})
+@Component({})
 export default class App extends Vue{
   
 }
@@ -22,10 +19,8 @@ export default class App extends Vue{
 
 
 <style lang="scss">
-@import "@/styles/variables.scss";
 
 #app {
-  font-family: $font-default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

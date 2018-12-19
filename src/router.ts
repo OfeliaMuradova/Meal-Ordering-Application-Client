@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/pages/Home.vue'
-import Login from '@/pages/Login.vue'
-import Order from '@/pages/Order.vue'
-import Menus from '@/pages/Menus.vue'
-import Profile from '@/components/Profile.vue'
-import Slider from '@/components/Slider.vue'
+import Home from '@/user/pages/Home.vue'
+import Login from '@/Login.vue'
+import Order from '@/user/pages/Order.vue'
+import Menus from '@/user/pages/Menus.vue'
+import Profile from '@/user/components/Profile.vue'
+import Slider from '@/user/components/Slider.vue'
+import AdminPanel from '@/admin/AdminPanel.vue'
+import AdminForm from '@/admin/components/AdminForm.vue'
+//import AdminMenus from '@/admin/components/AdminMenus.vue'
+import Orders from '@/admin/components/Orders.vue'
+//import Users from '@/admin/components/Users.vue'
 
 Vue.use(Router)
 
@@ -16,44 +21,114 @@ let router = new Router({
   mode: 'history',
   routes: [
       {
-          path: '/',
-          component: Home,
-          meta: { 
-            requiresAuth: true
-          },
-          children: [
-            {
-              path: '',
-              name: 'slider',
-              component: Slider,
-              meta: { 
-                requiresAuth: true
-              }
-            },
-            {
-              path: '/menus',
-              name: 'menus',
-              component: Menus,
-              meta: { 
-                requiresAuth: true
-              }
-            },
-            {
-              path: '/order',
-              name: 'order',
-              component: Order,
-              meta: { 
-                requiresAuth: true
-              }
+        path: '/',
+        component: Home,
+        meta: { 
+          requiresAuth: true,
+          admin: false
+        },
+        children: [
+          {
+            path: '',
+            name: 'slider',
+            component: Slider,
+            meta: { 
+              requiresAuth: true,
+              admin: false
             }
-          ]
+          },
+          {
+            path: '/menus',
+            name: 'menus',
+            component: Menus,
+            meta: { 
+              requiresAuth: true,
+              admin: false
+            }
+          },
+          {
+            path: '/order',
+            name: 'order',
+            component: Order,
+            meta: { 
+              requiresAuth: true,
+              admin: false
+            }
+          }
+        ]
+      },
+      {
+        path: '/admin',
+        name: 'admin',
+        component: AdminPanel,
+        meta: { 
+          requiresAuth: true,
+          admin: true
+        },
+        children: [
+          {
+            path: 'order',
+            name: 'adminOrder',
+            component: Order,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            }
+          },
+          {
+            path: 'companies',
+            name: 'companies',
+            component: AdminForm,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            },
+          },
+          {
+            path: 'profile',
+            name: 'adminProfile',
+            component: Profile,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            },
+          },
+          {
+            path: 'orders',
+            name: 'orders',
+            component: Orders,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            },
+          },
+          {
+            path: 'menus',
+            name: 'adminMenus',
+            component: AdminForm,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            },
+          },
+          {
+            path: 'users',
+            name: 'users',
+            component: AdminForm,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            },
+          },
+        ]
       },
       {
           path: '/login',
           name: 'login',
           component: Login,
           meta: { 
-            requiresAuth: false
+            requiresAuth: false,
+            //admin: false
           }
       }
   ]
@@ -63,7 +138,6 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
     checkAuth();
-
     next({ path: '/login', query: { redirect: to.fullPath }});
   } else {
     next();
@@ -83,7 +157,7 @@ router.beforeEach((to, from, next) => {
         }
     });
 
-    //todo: checktoken and if the token is valid
+    //todo: validateToken
     if(token)
       loggedIn = true;
   }
