@@ -118,7 +118,7 @@ export default class AdminPanel extends Vue{
 }
 
 #navbarWEX:first-child{
-  padding-top: 20px;
+  padding-top: 20px;  
 }
 
 #content{
