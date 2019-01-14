@@ -58,7 +58,7 @@
             </nav>
         </div>
         <div class="col py-2" id="content">
-          <router-view :componentName=componentName></router-view>
+          <router-view :componentName=componentName :list=componentList></router-view>
         </div>
       </div>
     </div>  
@@ -70,14 +70,24 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { userList, companiesList } from '@/types';
 
 @Component({})
 export default class AdminPanel extends Vue{
+  private menus: any = companiesList;
+  private companies: any = companiesList;
+  private users: any = userList;
  
   get componentName() {
     if (this.$route.name === 'adminMenus') { return 'menus' }
     if (this.$route.name === 'companies') { return 'companies'}
     if (this.$route.name === 'users') { return 'users'}
+  }
+
+  get componentList() {
+    if (this.$route.name === 'adminMenus') { debugger; return this.menus }
+    if (this.$route.name === 'companies') { return this.companies}
+    if (this.$route.name === 'users') { return this.users}
   }
 
   private logout() {

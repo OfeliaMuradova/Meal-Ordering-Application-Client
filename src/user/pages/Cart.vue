@@ -48,8 +48,8 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator';
-import Meal from '@/types.ts'
-import Days from '@/types.ts'
+import { Meal } from '@/types.ts'
+import { Workdays } from '@/types.ts'
 
 @Component({})
 export default class Cart extends Vue{

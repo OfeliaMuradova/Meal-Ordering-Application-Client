@@ -1,4 +1,4 @@
-export default interface Meal{
+export interface Meal{
   qty: number;
   code: string;
   type: string;
@@ -6,8 +6,19 @@ export default interface Meal{
   singlePrice: number;
 }
 
-export default interface Order{
-  
+export interface User{
+  name: string,
+  username: string,
+  password: string,
+  position: string,
+  email: string,
+  phone: string,
+  role: string
+}
+
+export interface Company{
+  name: string,
+  url: string  
 }
 
 export enum Workdays{
@@ -17,3 +28,97 @@ export enum Workdays{
   Thursday,
   Friday
 }
+
+export let userList: Array<User> = [
+    { name: 'Mark Mark',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},
+
+      { name: 'Guga Makharashvili',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},
+
+    { name: 'Mark Mark',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},
+
+      { name: 'Guga Makharashvili',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},
+
+    { name: 'Mark Mark',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},
+
+      { name: 'Guga Makharashvili',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},  
+      
+    { name: 'Mark Mark',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},
+
+      { name: 'Guga Makharashvili',
+      username: 'ertert',
+      password: 'string',
+      position: 'string',
+      email: 'string',
+      phone: 'string',
+      role: 'string'},  
+]
+
+
+export let companiesList: Array<Company> = [
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  },
+  { name: 'Merkel Menu',
+    url: 'string'
+  }
+]
