@@ -42,14 +42,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import axios from 'axios'
+import axios from 'axios';
+import * as constants from '@/constants.ts';
 
 @Component({})
 export default class Login extends Vue{
   private username: string = '';
   private password : string = '';
   private rememberMeChecked: boolean = false;
-
 
   private login() {
  
@@ -60,8 +60,7 @@ export default class Login extends Vue{
       password: 'admin'
     }
 
-    debugger;
-    axios.post('http://localhost:8080/login', data, {
+    axios.post( constants.SERVERURL + '/login', data, {
        headers: {
              'Accept': 'application/json',
              'Content-Type': 'application/json',
@@ -69,25 +68,13 @@ export default class Login extends Vue{
              'crossDomain': true,
          }
       }).then( (response: any) => {
-          debugger;
-          this.set_cookie("access_token", response.data.token);
+          constants.set_cookie("access_token", response.data.token);
           this.$router.replace({ name: "slider" });
-          console.log(this.getCookie("access_token"));
       })
       .catch((error: any) => {
         console.log(error.response)
     });
 
-  }
-
-  set_cookie(name:string, value:string) {
-    document.cookie = name +'='+ value +'; Path=/;';
-  }
-
-  getCookie(name:string) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
   }
 
 }

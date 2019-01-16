@@ -71,12 +71,14 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { userList, companiesList } from '@/types';
+import axios from 'axios';
+import * as constants from '@/constants.ts';
 
 @Component({})
 export default class AdminPanel extends Vue{
   private menus: any = companiesList;
-  private companies: any = companiesList;
-  private users: any = userList;
+  private companies: any = [];
+  private users: any = [];
  
   get componentName() {
     if (this.$route.name === 'adminMenus') { return 'menus' }
@@ -85,23 +87,46 @@ export default class AdminPanel extends Vue{
   }
 
   get componentList() {
-    if (this.$route.name === 'adminMenus') { debugger; return this.menus }
-    if (this.$route.name === 'companies') { return this.companies}
-    if (this.$route.name === 'users') { return this.users}
+    if (this.$route.name === 'adminMenus') { return this.menus }
+
+    if (this.$route.name === 'companies') { 
+    
+      axios.get(constants.SERVERURL + '/admin/companies/list', {
+          headers: constants.DEFAULT_HEADERS
+          }).then( (response: any) => {
+            this.companies = response.data;
+            return;
+          })
+          .catch((error: any) => {
+            console.log(error.response)
+        });
+        return this.companies;
+    }
+
+    if (this.$route.name === 'users') { 
+
+      axios.get(constants.SERVERURL + '/admin/users/list', {
+          headers: constants.DEFAULT_HEADERS
+          }).then( (response: any) => {
+            this.users = response.data;
+            return;
+          })
+          .catch((error: any) => {
+            console.log(error.response)
+        });
+        return this.users;
+     }
+
   }
 
   private logout() {
     try{
-			this.delete_cookie('access_token');
+			constants.delete_cookie('access_token');
       this.$router.replace({ path: "/login" });
     }
     catch(error) {
       console.log(error.response)
     };
-  }
-
-  delete_cookie(name:string) {
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
 
 }

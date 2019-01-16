@@ -37,23 +37,17 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios'
+import * as constants from '@/constants.ts';
 
 @Component({})
 export default class Slider extends Vue{
   
   private callTest(){
     debugger;
-    //axios.defaults.headers.common['Authorization'] = 'common';
+    //axios.defaults.headers.common['Authorization'] = 'Bearer ';
     //console.log(axios.defaults.headers);
-    axios.get('http://localhost:8080/companies/list', {
-       headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json',
-             'Access-Control-Allow-Origin': '*',
-             'Access-Control-Allow-Headers': 'Content-Type',
-             'crossDomain': true,
-             'Authorization': 'Bearer' + this.getCookie('access_token')
-         }
+    axios.get(constants.SERVERURL + '/orders/list', {
+       headers: constants.DEFAULT_HEADERS
       }).then( (response: any) => {
           console.log("request sent successfully");
       })
@@ -62,17 +56,6 @@ export default class Slider extends Vue{
     });
 
   }
-
-  set_cookie(name:string, value:string) {
-    document.cookie = name +'='+ value +'; Path=/;';
-  }
-
-  getCookie(name:string) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-  }
-
 
 }
 </script>

@@ -152,7 +152,7 @@ router.beforeEach((to, from, next) => {
       cookies.forEach((cookie: string) => {
         if(cookie.startsWith("access_token")){
           var parts = cookie.split("=");
-          console.log(parts[1]);
+          //console.log(parts[1]);
           token = parts[1];
         }
     });

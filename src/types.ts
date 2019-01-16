@@ -96,29 +96,29 @@ export let userList: Array<User> = [
 ]
 
 
-export let companiesList: Array<Company> = [
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  },
-  { name: 'Merkel Menu',
-    url: 'string'
-  }
-]
+ export let companiesList: Array<Company> = [
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   },
+//   { name: 'Merkel Menu',
+//     url: 'string'
+//   }
+ ]
