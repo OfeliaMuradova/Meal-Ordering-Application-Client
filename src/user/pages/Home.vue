@@ -56,9 +56,12 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios'
+import { Prop } from 'vue-property-decorator';
+import * as constants from '@/constants.ts'
 
 @Component({})
 export default class Home extends Vue{
+
 	private user = {
     name: '',
     email: '',
@@ -86,20 +89,15 @@ export default class Home extends Vue{
 	}
 	*/
 
-  private logout() {
-    debugger;
-    try{
-			this.delete_cookie('access_token');
-      this.$router.replace({ path: "/login" });
-    }
-    catch(error) {
-      console.log(error.response)
-    };
-  }
-
-  delete_cookie(name:string) {
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  }
+	private logout() {
+		try{
+			constants.delete_cookie('access_token');
+			this.$router.replace({ path: "/login" });
+		}
+		catch(error) {
+			console.log(error.response)
+		};
+	}
 
 }
 </script>

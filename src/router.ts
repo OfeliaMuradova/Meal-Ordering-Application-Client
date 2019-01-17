@@ -9,8 +9,8 @@ import Slider from '@/user/components/Slider.vue'
 import AdminPanel from '@/admin/AdminPanel.vue'
 import AdminForm from '@/admin/components/AdminForm.vue'
 //import AdminMenus from '@/admin/components/AdminMenus.vue'
-import Orders from '@/admin/components/Orders.vue'
-//import Users from '@/admin/components/Users.vue'
+//import Orders from '@/admin/components/Orders.vue'
+import Users from '@/admin/components/Users.vue'
 
 Vue.use(Router)
 
@@ -96,7 +96,7 @@ let router = new Router({
           {
             path: 'orders',
             name: 'orders',
-            component: Orders,
+            component: Users,
             meta: { 
               requiresAuth: true,
               admin: true

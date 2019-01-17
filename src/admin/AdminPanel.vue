@@ -58,7 +58,7 @@
             </nav>
         </div>
         <div class="col py-2" id="content">
-          <router-view :componentName=componentName :list=componentList></router-view>
+          <router-view :componentName=componentName :list=list></router-view>
         </div>
       </div>
     </div>  
@@ -69,65 +69,66 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Component from 'vue-class-component'
-import { userList, companiesList } from '@/types';
+import { Component, Watch } from "vue-property-decorator";
+import { userList } from '@/types';
 import axios from 'axios';
 import * as constants from '@/constants.ts';
 
 @Component({})
 export default class AdminPanel extends Vue{
-  private menus: any = companiesList;
-  private companies: any = [];
-  private users: any = [];
- 
+  private list: any = [];
+
   get componentName() {
     if (this.$route.name === 'adminMenus') { return 'menus' }
     if (this.$route.name === 'companies') { return 'companies'}
     if (this.$route.name === 'users') { return 'users'}
   }
 
-  get componentList() {
-    if (this.$route.name === 'adminMenus') { return this.menus }
+  @Watch('$route', { immediate: true, deep: true })
+  onUrlChange(route: any) {
+      if (route.name === 'adminMenus') { 
+      axios.get(constants.SERVERURL + '/admin/menus/list', {
+        headers: constants.DEFAULT_HEADERS
+        }).then( (response: any) => {
+          this.list = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+    }
 
-    if (this.$route.name === 'companies') { 
-    
+    if (route.name === 'companies') { 
       axios.get(constants.SERVERURL + '/admin/companies/list', {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-            this.companies = response.data;
-            return;
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });
-        return this.companies;
+        headers: constants.DEFAULT_HEADERS
+        }).then( (response: any) => {
+          this.list = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
     }
 
-    if (this.$route.name === 'users') { 
-
+    if (route.name === 'users') { 
       axios.get(constants.SERVERURL + '/admin/users/list', {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-            this.users = response.data;
-            return;
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });
-        return this.users;
+        headers: constants.DEFAULT_HEADERS
+        }).then( (response: any) => {
+          this.list = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
      }
-
   }
 
-  private logout() {
-    try{
+	private logout() {
+		try{
 			constants.delete_cookie('access_token');
-      this.$router.replace({ path: "/login" });
-    }
-    catch(error) {
-      console.log(error.response)
-    };
-  }
+			this.$router.replace({ path: "/login" });
+		}
+		catch(error) {
+			console.log(error.response)
+		};
+	}
 
 }
 </script>

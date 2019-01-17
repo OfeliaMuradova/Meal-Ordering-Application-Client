@@ -9,16 +9,22 @@ export interface Meal{
 export interface User{
   name: string,
   username: string,
-  password: string,
+  password?: string,
   position: string,
   email: string,
   phone: string,
   role: string
 }
 
+export interface Menu{
+  path: string,
+  //webPageUrl: string  
+}
+
 export interface Company{
   name: string,
-  url: string  
+  webPageUrl: string  
+  menus: Array<Menu>
 }
 
 export enum Workdays{

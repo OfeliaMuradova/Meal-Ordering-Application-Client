@@ -13,19 +13,20 @@
       <table id="userTable" class="table table-hover table-striped">
         <thead>
           <tr class="d-flex">
-            <th scope="col"></th>
+            <th scope="col" class="col-1"></th>
             <th scope="col" class="col-3">Name</th>
             <th scope="col" class="col-2">Website</th>
+            <th scope="col" class="col-5"></th>
           </tr>
         </thead>
         <tbody>
           <tr class="d-flex" v-for="(company, index) in list" v-bind:key="index">
-            <th scope="row">{{ index + 1 }} </th>
+            <th scope="row" class="col-1">{{ index + 1 }} </th>
             <td class="col-3">{{ company.name }}</td>
             <td class="col-2">{{ company.webPageUrl }}</td>
-            <td class="col-6" align="right">  
-                <img id="imgEdit" src="@/assets/edit1.png" @click="editCompany(company.id)" >
-                <img id="imgDelete" src="@/assets/delete1.png" @click="deleteCompany(company.id)">
+            <td class="col-5" align="right">  
+              <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addCompaniesModal" @click="prepareEdit(company)">
+              <img id="imgDelete" src="@/assets/delete1.png" @click="deleteCompany(company.id)">
             </td>
           </tr>
         </tbody>
@@ -33,12 +34,12 @@
     </div>
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addComaniesModal">
+    <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addCompaniesModal" @click="prepareAdd()">
       Add company
     </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="addComaniesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Add CompanyModal -->
+    <div class="modal fade" id="addCompaniesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -53,22 +54,21 @@
               <div class="col">
                 <div class="form-group">
                   <label for="companyName">Company name</label>
-                  <input type="text" class="form-control" id="companyName" aria-describedby="help" placeholder="Enter name">
+                  <input type="text" class="form-control" id="companyName" aria-describedby="help" placeholder="Enter name" v-model="addedOrUpdatedCompany.name">
                 </div>
                 <div class="form-group">
                   <label for="webUrl">Website URL</label>
-                  <input type="text" class="form-control" id="webUrl" placeholder="Enter URL">
+                  <input type="text" class="form-control" id="webUrl" placeholder="Enter URL" v-model="addedOrUpdatedCompany.webPageUrl">
                 </div>  
               </div>
 
-
               <div class="col">
-                <label for="companyName">Add menus</label>
+                <label for="companyName">Menus</label>
 
                 <table class="table">
                   <tbody>
                     <tr v-for="(row, index) in rows" v-bind:key="index">
-                      <td><input type="text" class="form-control" v-model="row.title"></td>
+                      <td><input type="text" class="form-control" ></td>
                       <td>
                         <label class="fileContainer">
                           <input type="file" v-bind:id="index">
@@ -78,7 +78,7 @@
                   </tbody>
                 </table>
                 <div>
-                    <button class="btn btn-info" v-on:click="addRow()">Add image</button>
+                  <button class="btn btn-info" v-on:click="addRow()">Add image</button>
                 </div>
               </div> 
             </div> <!-- row -->
@@ -86,7 +86,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-info">Add</button>
+            <button type="button" class="btn btn-info" @click="addCompany">Add</button>
           </div>
         </div>
       </div>
@@ -97,62 +97,7 @@
 
   <!-- users -->
     <form v-if="componentName=='users'">
-
-        <div class="scroll">
-          <table id="userTable" class="table table-hover table-striped">
-            <thead>
-              <tr class="d-flex">
-                <th scope="col"></th>
-                <th scope="col" class="col-3">Name</th>
-                <th scope="col" class="col-2">Username</th>
-                <th scope="col" class="col-2">Position</th>
-                <th scope="col" class="col-2">Email</th>
-                <th scope="col" class="col-2">Phone</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="d-flex" v-for="(user, index) in list" v-bind:key="index">
-                <th scope="row">{{ index + 1 }} </th>
-                <td class="col-3">{{ user.name }}</td>
-                <td class="col-2">{{ user.username }}</td>
-                <td class="col-2">{{ user.position }}</td>
-                <td class="col-2">{{ user.email }}</td>
-                <td class="col-2">{{ user.phone }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-      <b-btn class="btn btn-info float-right" v-b-modal.addUserModal>Add user</b-btn>
-
-      <b-modal id="addUserModal" v-show="showUserModal" centered hide-footer title="Add new user:">
-        <div class="row">
-          <div class="col">
-            <input type="text" class="form-control user-data" id="" placeholder="Name, Surname">
-            <input type="text" class="form-control user-data" id="" placeholder="Username">
-            <input type="text" class="form-control user-data" id="" placeholder="Password">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control user-data" id="" placeholder="Position">
-            <input type="text" class="form-control user-data" id="" placeholder="E-mail">
-            <input type="text" class="form-control user-data" id="" placeholder="Phone number">
-          </div>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-          <label class="form-check-label" for="exampleRadios1">
-           User
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-          <label class="form-check-label" for="exampleRadios2">
-            Admin
-          </label>
-        </div>
-      </b-modal>
-
+      <users :list=list></users>
     </form>
 
     
@@ -170,7 +115,7 @@
             <tbody>
               <tr class="d-flex" v-for="(company, index) in list" v-bind:key="index">
                 <th scope="row">{{ index + 1 }} </th>
-                <td class="col-3">{{ company.url }}</td>
+                <td class="col-3">{{ company.webPageUrl }}</td>
               </tr>
             </tbody>
           </table>
@@ -207,35 +152,87 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Prop, Component } from 'vue-property-decorator';
+import { Prop, Component, Watch } from 'vue-property-decorator';
 import * as constants from '@/constants.ts';
 import axios from 'axios';
+import { Company, Menu } from '@/types';
+import Users from '@/admin/components/Users.vue'
 
-@Component({})
+@Component({
+  components: {
+    'users': Users
+  },
+})
 export default class AdminForm extends Vue{
   @Prop() componentName: string; 
   @Prop() list: any;
-  private showUserModal: boolean = false;
 
+  private modalTarget: string = '';
 
-  private editCompany(id: number){
+  private menus: Array<Menu> = [
+    { path: 'hiii' }
+  ];
 
-    axios.patch(constants.SERVERURL + '/admin/companies/' + id, {
+  private addedOrUpdatedCompany: Company = {
+    name: '',
+    webPageUrl: '',
+    menus: this.menus
+  };
+
+  private addCompany(){
+    axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
-            console.log('edited');
-            console.log('/admin/companies/' + id);
+          location.reload();
         })
         .catch((error: any) => {
           console.log(error.response)
       });
-  
   }
 
+  private editCompany(id: number){
+    debugger;
+    console.log(this.addedOrUpdatedCompany);
+
+    axios.put(constants.SERVERURL + '/admin/companies/' + id, this.addedOrUpdatedCompany, {
+        headers: constants.DEFAULT_HEADERS
+        }).then( (response: any) => {
+            console.log('edited');
+
+            location.reload();
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+  }
+
+  private deleteCompany(id: number){
+    axios.delete(constants.SERVERURL + '/admin/companies/' + id, {
+        headers: constants.DEFAULT_HEADERS
+        }).then( (response: any) => {
+          location.reload();
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+  }
+
+  private prepareAdd(){
+    //empty the object to clear the fields in the modal
+    this.addedOrUpdatedCompany = {
+      name: '',
+      webPageUrl: '',
+      menus: this.menus
+    };
+  }
+
+  private prepareEdit(company: any){
+    this.addedOrUpdatedCompany = company;
+  }
 
   private rows: any = [
     {
-      title: "hello"
+      title: "http://"
     }
   ];
 
@@ -253,7 +250,6 @@ export default class AdminForm extends Vue{
   }
 
 }
-
 </script>
 
 
