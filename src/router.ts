@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/user/pages/Home.vue'
 import Login from '@/Login.vue'
+
+import Home from '@/user/pages/Home.vue'
 import Order from '@/user/pages/Order.vue'
 import Menus from '@/user/pages/Menus.vue'
 import Profile from '@/user/components/Profile.vue'
 import Slider from '@/user/components/Slider.vue'
+
 import AdminPanel from '@/admin/AdminPanel.vue'
 import AdminForm from '@/admin/components/AdminForm.vue'
-//import AdminMenus from '@/admin/components/AdminMenus.vue'
-//import Orders from '@/admin/components/Orders.vue'
+import Orders from '@/admin/components/Orders.vue'
 import Users from '@/admin/components/Users.vue'
 
 Vue.use(Router)
@@ -60,6 +61,7 @@ let router = new Router({
       {
         path: '/admin',
         name: 'admin',
+        redirect: '/admin/orders',
         component: AdminPanel,
         meta: { 
           requiresAuth: true,
@@ -67,9 +69,9 @@ let router = new Router({
         },
         children: [
           {
-            path: 'order',
-            name: 'adminOrder',
-            component: Order,
+            path: 'orders',
+            name: 'adminOrders',
+            component: Orders,
             meta: { 
               requiresAuth: true,
               admin: true
@@ -145,22 +147,22 @@ router.beforeEach((to, from, next) => {
 });
 
 
-  function checkAuth(){
-    var token = "";
-    var value = "; " + document.cookie;
-      var cookies = value.split("; ");
-      cookies.forEach((cookie: string) => {
-        if(cookie.startsWith("access_token")){
-          var parts = cookie.split("=");
-          //console.log(parts[1]);
-          token = parts[1];
-        }
-    });
+function checkAuth(){
+  var token = "";
+  var value = "; " + document.cookie;
+    var cookies = value.split("; ");
+    cookies.forEach((cookie: string) => {
+      if(cookie.startsWith("access_token")){
+        var parts = cookie.split("=");
+        //console.log(parts[1]);
+        token = parts[1];
+      }
+  });
 
-    //todo: validateToken
-    if(token)
-      loggedIn = true;
-  }
+  //todo: validateToken
+  if(token)
+    loggedIn = true;
+}
 
 
 

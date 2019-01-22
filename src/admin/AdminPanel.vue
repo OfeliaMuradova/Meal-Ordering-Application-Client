@@ -10,7 +10,7 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto" id="bootstrap-overrides-right">
-            <router-link :to="{ name: 'adminOrder'}" tag="li" active-class="nav-item">
+            <router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
               <a class="nav-link" href="#">Order
               <img class="icon" src="@/assets/order.png">
               </a>
@@ -44,13 +44,13 @@
                         <router-link :to="{ name: 'adminMenus'}" tag="li" active-class="nav-item ">
                           <a class="nav-link" href="#">Menus</a>
                         </router-link>              
-                        <router-link :to="{ name: 'orders'}" tag="li" active-class="nav-item ">
+                        <router-link :to="{ name: 'adminOrders'}" tag="li" active-class="nav-item ">
                           <a class="nav-link" href="#">Orders</a>
                         </router-link>              
                         <router-link :to="{ name: 'users'}" tag="li" active-class="nav-item">
                           <a class="nav-link" href="#">Users</a>
                         </router-link>              
-                        <router-link :to="{ name: 'companies'}" tag="li" active-class="nav-item ">
+                        <router-link :to="{ name: ''}" tag="li" active-class="nav-item ">
                           <a class="nav-link" href="#">Contents</a>
                         </router-link>              
                     </div>
@@ -70,7 +70,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from "vue-property-decorator";
-import { userList } from '@/types';
 import axios from 'axios';
 import * as constants from '@/constants.ts';
 
@@ -106,6 +105,22 @@ export default class AdminPanel extends Vue{
         .catch((error: any) => {
           console.log(error.response)
       });
+    }
+
+    if (route.name === 'adminOrders') { 
+      debugger;
+      // axios.get(constants.SERVERURL + '/admin/orders/list', {
+      //   headers: constants.DEFAULT_HEADERS,
+      //   params: {
+      //       name: 'Pending'
+      //     }
+      //   }).then( (response: any) => {
+      //     debugger;
+      //     this.list = response.data;
+      //   })
+      //   .catch((error: any) => {
+      //     console.log(error.response)
+      // });
     }
 
     if (route.name === 'users') { 

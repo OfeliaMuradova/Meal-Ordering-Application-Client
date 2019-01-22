@@ -12,19 +12,33 @@ export interface User{
   password?: string,
   position: string,
   email: string,
-  phone: string,
-  role: string
+  phone_number: string,
+  userRole: UserRole
+}
+
+export interface Order{
+  order_text: string,
+  menu: Menu
+  confirmer: User
+  //updated_at: Date
+  //confirmed_at: Date
 }
 
 export interface Menu{
   path: string,
-  //webPageUrl: string  
+  weekNum: number,
+  company: Company
 }
 
 export interface Company{
   name: string,
   webPageUrl: string  
   menus: Array<Menu>
+}
+
+export interface UserRole{
+  id: number,
+  name: string
 }
 
 export enum Workdays{
@@ -34,97 +48,3 @@ export enum Workdays{
   Thursday,
   Friday
 }
-
-export let userList: Array<User> = [
-    { name: 'Mark Mark',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},
-
-      { name: 'Guga Makharashvili',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},
-
-    { name: 'Mark Mark',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},
-
-      { name: 'Guga Makharashvili',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},
-
-    { name: 'Mark Mark',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},
-
-      { name: 'Guga Makharashvili',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},  
-      
-    { name: 'Mark Mark',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},
-
-      { name: 'Guga Makharashvili',
-      username: 'ertert',
-      password: 'string',
-      position: 'string',
-      email: 'string',
-      phone: 'string',
-      role: 'string'},  
-]
-
-
- export let companiesList: Array<Company> = [
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   },
-//   { name: 'Merkel Menu',
-//     url: 'string'
-//   }
- ]

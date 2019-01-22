@@ -52,7 +52,6 @@
               <div class="col">
                 <input type="text" class="form-control user-data" id="" placeholder="Name, Surname" v-model="addedOrUpdatedUser.name">
                 <input type="text" class="form-control user-data" id="" placeholder="Username" v-model="addedOrUpdatedUser.username">
-                <!-- <input type="text" class="form-control user-data" id="" placeholder="Password" v-model="addedOrUpdatedUser.password"> -->
               </div>
               <div class="col">
                 <input type="text" class="form-control user-data" id="" placeholder="Position" v-model="addedOrUpdatedUser.position">
@@ -94,39 +93,44 @@ import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator';
 import * as constants from '@/constants.ts';
 import axios from 'axios';
-import { User } from '@/types';
+import { Order } from '@/types';
 
 @Component({})
-export default class Users extends Vue{
+export default class Orders extends Vue{
   @Prop() list: any;
 
   private action: string = '';
-  private addedOrUpdatedUserID: number = -1;
-
-  private addedOrUpdatedUser: User = {
-    name: '',
-    username: '',
-    position: '',
-    password: '',
-    email: '',
-    phone_number: '',
-    userRole: {
-      id: -1,
-      name: ''
+  private addedOrUpdatedOrderID: number = null;
+  //private addedOrUpdatedOrder = {} as Order;
+  private addedOrUpdatedOrder: Order = {
+    order_text: '',
+    confirmer: {
+      name: '',
+      username: '',
+      position: '',
+      password: '',
+      email: '',
+      phone_number: '',
+      userRole: {
+        id: -1,
+        name: ''
+      }
+    },
+    menu: {
+      path: '',
+      weekNum: null,
+      company: {
+        name: '',
+        webPageUrl: '',
+        menus: []
+      }
     }
   };
 
   private addOrUpdateUser(){
     if(this.action == 'add'){
-      if(this.addedOrUpdatedUser.userRole.name == 'USER')
-        this.addedOrUpdatedUser.userRole.id = 2;
-      else if(this.addedOrUpdatedUser.userRole.name == 'ADMIN')
-        this.addedOrUpdatedUser.userRole.id = 1;
-      else { 
-        alert('Wrong user role!');
-      }
-
-      axios.post(constants.SERVERURL + '/admin/users/', this.addedOrUpdatedUser, {
+      
+      axios.post(constants.SERVERURL + '/admin/orders/', this.addedOrUpdatedOrder, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
           location.reload();
@@ -136,7 +140,7 @@ export default class Users extends Vue{
       });           
     }
     else if(this.action == 'edit'){
-      axios.put(constants.SERVERURL + '/admin/users/' + this.addedOrUpdatedUserID, this.addedOrUpdatedUser, {
+      axios.put(constants.SERVERURL + '/admin/orders/' + this.addedOrUpdatedOrderID, this.addedOrUpdatedOrder, {
           headers: constants.DEFAULT_HEADERS
           }).then( (response: any) => {
               location.reload();
@@ -149,9 +153,9 @@ export default class Users extends Vue{
       alert('Something went wrong!');
   }
 
-  private deleteUser(id: number){
-    
-    axios.delete(constants.SERVERURL + '/admin/users/user/' + id, {
+  private deleteOrder(id: number){
+    debugger;
+    axios.delete(constants.SERVERURL + '/admin/orders/' + id, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
           debugger;
@@ -164,10 +168,14 @@ export default class Users extends Vue{
   }
 
   private prepareAdd(){
+    debugger;
     this.action = 'add';
 
     //empty the object to clear the fields in the modal
-    this.addedOrUpdatedUser = {
+    //this.addedOrUpdatedOrder = { } as Order;
+    this.addedOrUpdatedOrder = {
+    order_text: '',
+    confirmer: {
       name: '',
       username: '',
       position: '',
@@ -178,16 +186,25 @@ export default class Users extends Vue{
         id: -1,
         name: ''
       }
-    };
+    },
+    menu: {
+      path: '',
+      weekNum: null,
+      company: {
+        name: '',
+        webPageUrl: '',
+        menus: []
+      }
+    }
+  };
   }
 
-  private prepareEdit(user: User, id: number){
+  private prepareEdit(user: Order, id: number){
     debugger;
     this.action = 'edit';
-    this.addedOrUpdatedUser = user;
-    this.addedOrUpdatedUserID = id;
+    this.addedOrUpdatedOrder = user;
+    this.addedOrUpdatedOrderID = id;
   }
-
 
 }
 </script>

@@ -10,13 +10,13 @@
 
               <form class="form-signin" method="post" action="login" >
                 <div class="form-label-group">
-                  <label for="inputEmail">Username</label>
-                  <input type="text" id="inputEmail" class="form-control" autofocus>  <!--v-model="username"-->
+                  <label for="inputUsername">Username</label>
+                  <input type="text" id="inputUsername" class="form-control" :data-state="usernameState" autofocus>  <!--v-model="username"-->
                 </div>
 
                 <div class="form-label-group">
                    <label for="inputPassword">Password</label>
-                   <input type="password" id="inputPassword" class="form-control" > <!--v-model="password"-->
+                   <input type="password" id="inputPassword" class="form-control" :data-state="passwordState" > <!--v-model="password"-->
                 </div>
 
                 <div class="custom-control custom-checkbox mb-3">
@@ -34,8 +34,6 @@
 
   </div>
 
-
-
 </template>
 
 
@@ -50,30 +48,39 @@ export default class Login extends Vue{
   private username: string = '';
   private password : string = '';
   private rememberMeChecked: boolean = false;
+  private usernameState: string = '';
+  private passwordState: string = '';
 
   private login() {
- 
-    var data = {
-      //username: this.username,
-      //password: this.password
-      username: 'admin',
-      password: 'admin'
-    }
+    // if(this.username.trim() == null || this.username.trim() == ''){
+    //   this.usernameState = 'invalid';
+    // }
+    // else if(this.password.trim() == null || this.password.trim() == ''){
+    //   this.passwordState = 'invalid';
+    // }
+    // else{
+      var data = {
+        //username: this.username,
+        //password: this.password
+        username: 'admin',
+        password: 'admin'
+      }
 
-    axios.post( constants.SERVERURL + '/login', data, {
-       headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json',
-             'Access-Control-Allow-Origin': '*',
-             'crossDomain': true,
-         }
-      }).then( (response: any) => {
-          constants.set_cookie("access_token", response.data.token);
-          this.$router.replace({ name: "slider" });
-      })
-      .catch((error: any) => {
-        console.log(error.response)
-    });
+      axios.post( constants.SERVERURL + '/login', data, {
+        headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'crossDomain': true,
+          }
+        }).then( (response: any) => {
+            constants.set_cookie("access_token", response.data.token);
+            this.$router.replace({ name: "slider" });
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+    // }
 
   }
 
@@ -82,7 +89,14 @@ export default class Login extends Vue{
 
 
 <style scoped lang="scss">
-  
+  input#inputUsername[data-state="invalid"] {
+    border-color: hsl(0, 76%, 50%);;
+  }
+
+  input#inputPassword[data-state="invalid"] {
+    border-color: hsl(0, 76%, 50%);;
+  }
+
   .card-signin {
     border: 0;
     border-radius: 1rem;

@@ -15,17 +15,16 @@
           <tr class="d-flex">
             <th scope="col" class="col-1"></th>
             <th scope="col" class="col-3">Name</th>
-            <th scope="col" class="col-2">Website</th>
-            <th scope="col" class="col-5"></th>
+            <th scope="col" class="col-8">Website</th>
           </tr>
         </thead>
         <tbody>
           <tr class="d-flex" v-for="(company, index) in list" v-bind:key="index">
             <th scope="row" class="col-1">{{ index + 1 }} </th>
-            <td class="col-3">{{ company.name }}</td>
-            <td class="col-2">{{ company.webPageUrl }}</td>
-            <td class="col-5" align="right">  
-              <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addCompaniesModal" @click="prepareEdit(company)">
+            <td class="col-3 scrollable">{{ company.name }}</td>
+            <td class="col-7 scrollable">{{ company.webPageUrl }}</td>
+            <td class="col-1" align="right">  
+              <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addCompaniesModal" @click="prepareEdit(company, company.id)">
               <img id="imgDelete" src="@/assets/delete1.png" @click="deleteCompany(company.id)">
             </td>
           </tr>
@@ -38,12 +37,13 @@
       Add company
     </button>
 
-    <!-- Add CompanyModal -->
+    <!-- Company Add/Edit Modal -->
     <div class="modal fade" id="addCompaniesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New company: </h5>
+            <h5 v-if="action == 'add'" class="modal-title" id="exampleModalLabel">New company: </h5>
+            <h5 v-else-if="action == 'edit'" class="modal-title" id="exampleModalLabel">Edit company: </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -65,28 +65,15 @@
               <div class="col">
                 <label for="companyName">Menus</label>
 
-                <table class="table">
-                  <tbody>
-                    <tr v-for="(row, index) in rows" v-bind:key="index">
-                      <td><input type="text" class="form-control" ></td>
-                      <td>
-                        <label class="fileContainer">
-                          <input type="file" v-bind:id="index">
-                        </label>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div>
-                  <button class="btn btn-info" v-on:click="addRow()">Add image</button>
-                </div>
-              </div> 
+                
+              </div> <!-- col -->
             </div> <!-- row -->
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-info" @click="addCompany">Add</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="reload()">Cancel</button>
+            <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateCompany">Add</button>
+            <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateCompany">Submit</button>
           </div>
         </div>
       </div>
@@ -100,49 +87,14 @@
       <users :list=list></users>
     </form>
 
-    
   <!-- menus -->
     <form v-if="componentName=='menus'">
-
-        <div class="scroll">
-          <table id="menuTable" class="table table-hover table-striped">
-            <thead>
-              <tr class="d-flex">
-                <th scope="col"></th>
-                <th scope="col" class="col-3">Image</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="d-flex" v-for="(company, index) in list" v-bind:key="index">
-                <th scope="row">{{ index + 1 }} </th>
-                <td class="col-3">{{ company.webPageUrl }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-      <b-btn class="btn btn-info float-right" v-b-modal.addMenuModal>Add menu</b-btn>
-
-      <b-modal id="addMenuModal" 
-             title="Add new menu:"
-             centered 
-             @ok="addMenu" >
-        <div class="row">
-          <div class="col">
-            <input type="text" class="form-control user-data" id="" placeholder="Name, Surname">
-            <input type="text" class="form-control user-data" id="" placeholder="Username">
-            <input type="text" class="form-control user-data" id="" placeholder="Password">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control user-data" id="" placeholder="Position">
-            <input type="text" class="form-control user-data" id="" placeholder="E-mail">
-            <input type="text" class="form-control user-data" id="" placeholder="Phone number">
-          </div>
-        </div>
-
-      </b-modal>
-
+      <menus :list=list></menus>
+    </form>
+         
+  <!-- orders -->
+    <form v-if="componentName=='orders'">
+      <orders :list=list></orders>
     </form>
          
  
@@ -156,21 +108,33 @@ import { Prop, Component, Watch } from 'vue-property-decorator';
 import * as constants from '@/constants.ts';
 import axios from 'axios';
 import { Company, Menu } from '@/types';
-import Users from '@/admin/components/Users.vue'
+import Users from '@/admin/components/Users.vue';
+import Menus from '@/admin/components/Menus.vue';
+import Orders from '@/admin/components/Orders.vue';
 
 @Component({
   components: {
-    'users': Users
+    'users': Users,
+    'menus': Menus,
+    'orders': Orders
   },
 })
 export default class AdminForm extends Vue{
   @Prop() componentName: string; 
   @Prop() list: any;
 
-  private modalTarget: string = '';
+  private action: string = '';
+  private addedOrUpdatedCompanyID: number = -1;
 
   private menus: Array<Menu> = [
-    { path: 'hiii' }
+    { path: 'http://lkdlferferlfhliwehrfef',
+      weekNum: 30,
+      company: {
+        name: 'Merkel Menu',
+        webPageUrl: 'http://mrkel',
+        menus: []
+      } 
+     }
   ];
 
   private addedOrUpdatedCompany: Company = {
@@ -179,31 +143,31 @@ export default class AdminForm extends Vue{
     menus: this.menus
   };
 
-  private addCompany(){
-    axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
-        headers: constants.DEFAULT_HEADERS
-        }).then( (response: any) => {
-          location.reload();
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });
-  }
-
-  private editCompany(id: number){
-    debugger;
-    console.log(this.addedOrUpdatedCompany);
-
-    axios.put(constants.SERVERURL + '/admin/companies/' + id, this.addedOrUpdatedCompany, {
-        headers: constants.DEFAULT_HEADERS
-        }).then( (response: any) => {
-            console.log('edited');
-
+  private addOrUpdateCompany(){
+    if(this.action == 'add'){
+        axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
+          headers: constants.DEFAULT_HEADERS
+          }).then( (response: any) => {
             location.reload();
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });
+          })
+          .catch((error: any) => {
+            console.log(error.response)
+        });           
+    }
+    else if(this.action == 'edit'){
+      axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, this.addedOrUpdatedCompany, {
+          headers: constants.DEFAULT_HEADERS
+          }).then( (response: any) => {
+              console.log('edited');
+
+              location.reload();
+          })
+          .catch((error: any) => {
+            console.log(error.response)
+        });
+    }
+    else 
+      alert('Something went wrong!');
   }
 
   private deleteCompany(id: number){
@@ -218,6 +182,8 @@ export default class AdminForm extends Vue{
   }
 
   private prepareAdd(){
+    this.action = 'add';
+
     //empty the object to clear the fields in the modal
     this.addedOrUpdatedCompany = {
       name: '',
@@ -226,27 +192,10 @@ export default class AdminForm extends Vue{
     };
   }
 
-  private prepareEdit(company: any){
+  private prepareEdit(company: Company, id: number){
+    this.action = 'edit';
     this.addedOrUpdatedCompany = company;
-  }
-
-  private rows: any = [
-    {
-      title: "http://"
-    }
-  ];
-
-  private addMenu(){
-    alert('added menu');
-  };
-
-  addRow(){
-    debugger;
-    var elem = document.createElement('tr');
-    this.rows.push({
-      title: "",
-      
-    });
+    this.addedOrUpdatedCompanyID = id;
   }
 
 }
@@ -260,15 +209,15 @@ h4{
 
 #imgDelete{
   cursor: pointer; 
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
 }
 
 #imgEdit{
-  margin-right: 15px;
+  margin-right: 10px;
   cursor: pointer; 
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
 }
 
 #form{
@@ -298,5 +247,13 @@ th, td{
   overflow-y : scroll;
   margin-bottom: 30px;
 }
+
+//cell
+.scrollable{
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
 
 </style>
