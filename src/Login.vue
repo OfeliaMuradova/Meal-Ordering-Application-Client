@@ -73,7 +73,16 @@ export default class Login extends Vue{
             }
           }).then( (response: any) => {
               constants.set_cookie("access_token", response.data.token);
-              this.$router.replace({ name: "slider" });
+              
+              if(response.data.userRole.name == "USER")           
+                this.$router.replace({ name: "slider" });
+              else if(response.data.userRole.name == "ADMIN")              
+                this.$router.replace({ name: "admin" });
+              else{
+                alert('Something went wrong!');
+                this.$router.replace({ name: "login" });
+              }
+
           })
           .catch((error: any) => {
             console.log(error.response)
