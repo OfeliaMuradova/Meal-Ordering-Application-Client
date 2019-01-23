@@ -14,7 +14,7 @@
         <tbody>
           <tr class="d-flex" v-for="(menu, index) in list" v-bind:key="index">
             <th scope="row" class="col-1">{{ index + 1 }} </th>
-            <td class="col-4 scrollable"><a :href="menu.path">{{ menu.path }}</a></td>
+            <td class="col-4 scrollable"><a :href="menu.path" target="_blank">{{ menu.path }}</a></td>
             <td class="col-3 scrollable">{{ menu.weekNum }}</td>
             <td class="col-3 scrollable">{{ menu.company.name }}</td>
             <td class="col-1" align="right">  
@@ -47,22 +47,26 @@
             <div class="row">
               <div class="col">
                 <label for="inputMenuImagePath">Image Path</label>
-                <input id="inputMenuImagePath" type="text" class="form-control user-data" v-model="addedOrUpdatedMenu.path">
+                <input id="inputMenuImagePath" ref="inputMenuImagePath" type="text" class="form-control user-data" v-model="addedOrUpdatedMenu.path" autofocus>
+                <label class="error" ref="errorEmptyPath">* This field is required</label>
+                <label class="error" ref="errorWrongURL">Please enter a valid url</label>
                 <label for="inputMenuWeekNumber">Week number:</label>
-                <input id="inputMenuWeekNumber" type="text" class="form-control user-data" v-model="addedOrUpdatedMenu.weekNum">
+                <input id="inputMenuWeekNumber" ref="inputMenuWeekNumber" type="text" class="form-control user-data" v-model="addedOrUpdatedMenu.weekNum">
+                <label class="error" ref="errorEmptyWeekNumber">* This field is required</label>
+                <label class="error" ref="errorWeekNumber">Please enter a valid number</label>
 
                 <label for="companySelect">Company:</label>
-                <select id="companySelect" class="mb-3" v-model="companyId">
+                <select id="companySelect" required class="mb-3" v-model="companyId">
                   <option v-for="(company, index) in companiesList" :key="index" :value="company.id">{{ company.name }}</option>
                 </select>
-
+                <label class="error" ref="errorEmptyCompany">Please choose a company</label>
 
               </div>
             </div><!-- row -->
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="reload()">Cancel</button>
+            <button type="button" class="btn btn-secondary" @click="constants.reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateMenu">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateMenu">Submit</button>
           </div>
@@ -103,43 +107,55 @@ export default class Menus extends Vue{
   };
 
   private addOrUpdateMenu(){
-    if(this.action == 'add'){
-    
-    //get selected company object by id
-    axios.get(constants.SERVERURL + '/admin/companies/' + this.companyId + '/edit', {
-        headers: constants.DEFAULT_HEADERS
-        }).then( (response: any) => {
-          //set the company to the menu object
-          this.addedOrUpdatedMenu.company = response.data;
+    if(constants.validatorEmpty(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorEmptyPath)
+        && constants.validatorURL(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorWrongURL)
+        && constants.validatorEmpty(<Element>this.$refs.inputMenuWeekNumber, <Element>this.$refs.errorEmptyWeekNumber)
+        && constants.validatorNumber(<Element>this.$refs.inputMenuWeekNumber, <Element>this.$refs.errorWeekNumber)){
+          debugger;
+        if(!this.companyId){
+          (<any>this.$refs.errorEmptyCompany).style.display = 'block';
+        }
+        else if(this.action == 'add'){
           
-          //add the menu
-          axios.post(constants.SERVERURL + '/admin/menus/', this.addedOrUpdatedMenu, {
-            headers: constants.DEFAULT_HEADERS
-            }).then( (response: any) => {
-              location.reload();
-            })
-            .catch((error: any) => {
-              console.log(error.response)
-          }); 
+          //get selected company object by id
+          axios.get(constants.SERVERURL + '/admin/companies/' + this.companyId + '/edit', {
+              headers: constants.DEFAULT_HEADERS
+              }).then( (response: any) => {
+                //set the company to the menu object
+                this.addedOrUpdatedMenu.company = response.data;
+                
+                //add the menu
+                axios.post(constants.SERVERURL + '/admin/menus/', this.addedOrUpdatedMenu, {
+                  headers: constants.DEFAULT_HEADERS
+                  }).then( (response: any) => {
+                    location.reload();
+                  })
+                  .catch((error: any) => {
+                    console.log(error.response)
+                }); 
 
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });  
-    
+              })
+              .catch((error: any) => {
+                console.log(error.response)
+            });  
+          
+          }
+          else if(this.action == 'edit'){
+            axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
+                headers: constants.DEFAULT_HEADERS
+                }).then( (response: any) => {
+                  location.reload();
+                })
+                .catch((error: any) => {
+                  console.log(error.response)
+              });
+          }
+          else 
+            alert('Something went wrong!');
+        
+      
     }
-    else if(this.action == 'edit'){
-      axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-            location.reload();
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });
-    }
-    else 
-      alert('Something went wrong!');
+
   }
 
   private deleteMenu(id: number){
@@ -206,17 +222,17 @@ export default class Menus extends Vue{
     });
   }
 
-  private reload(){
-    debugger;
-    location.reload();
-  }
-
-
 }
 </script>
 
 
 <style scoped lang="scss">
+.error{
+  display: none;
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
 
 #imgDelete{
   cursor: pointer; 
@@ -249,8 +265,8 @@ th, td{
   border: none!important;
 }
 
-.user-data{
-  margin-bottom: 15px;
+label{
+  margin-top: 15px;
 }
 
 label{
@@ -295,6 +311,7 @@ select{
   height: 38px;
   width: 100%;
   padding: 7px;
+  margin-bottom: 0!important;
   appearance: none;
   -webkit-appearance: none; 
   -moz-appearance: none;

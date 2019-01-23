@@ -22,3 +22,40 @@ export function getCookie(name:string) {
 export function delete_cookie(name:string) {
   document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
+
+export function validatorEmpty(element: Element, label: any){
+  if((<HTMLInputElement>element).value.trim()== ""){
+    label.style.display = 'block';
+    (<HTMLInputElement>element).focus();
+    return false;
+  }	
+  label.style.display = 'none';
+  return true;
+}
+
+export function validatorURL(element: Element, label: any){
+  //let URLregex = new RegExp('^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$');
+  let URLregex = new RegExp('^(ftp|http|https):\/\/[^ "]+$');
+  if( !URLregex.test((<HTMLInputElement>element).value) ){
+    label.style.display = 'block';
+    (<HTMLInputElement>element).focus();
+    return false;
+  }	
+  label.style.display = 'none';
+  return true;
+}
+
+export function validatorNumber(element: Element, label: any){
+  let URLregex = new RegExp('^(5[0-3]|[1-4][0-9]|[1-9])$');
+  if( !URLregex.test((<HTMLInputElement>element).value) ){
+    label.style.display = 'block';
+    (<HTMLInputElement>element).focus();
+    return false;
+  }	
+  label.style.display = 'none';
+  return true;
+}
+
+export function reload(){
+  window.location.reload();
+}

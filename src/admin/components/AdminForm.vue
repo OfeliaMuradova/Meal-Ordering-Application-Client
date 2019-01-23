@@ -54,11 +54,14 @@
               <div class="col">
                 <div class="form-group">
                   <label for="companyName">Company name</label>
-                  <input type="text" class="form-control" id="companyName" aria-describedby="help" placeholder="Enter name" v-model="addedOrUpdatedCompany.name">
+                  <input type="text" class="form-control" ref="inputCompanyName" id="companyName" aria-describedby="help" placeholder="Enter name" v-model="addedOrUpdatedCompany.name">
+                  <label class="error" ref="errorCompanyName">* This field is required</label>
                 </div>
                 <div class="form-group">
                   <label for="webUrl">Website URL</label>
-                  <input type="text" class="form-control" id="webUrl" placeholder="Enter URL" v-model="addedOrUpdatedCompany.webPageUrl">
+                  <input type="text" class="form-control" id="webUrl" ref="inputWebsite" placeholder="Enter URL" v-model="addedOrUpdatedCompany.webPageUrl">
+                  <label class="error" ref="errorEmptyWebsite">* This field is required</label>
+                  <label class="error" ref="errorURL">Please, enter a valid URL</label>
                 </div>  
               </div>
 
@@ -71,7 +74,7 @@
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="reload()">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="constants.reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateCompany">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateCompany">Submit</button>
           </div>
@@ -144,30 +147,38 @@ export default class AdminForm extends Vue{
   };
 
   private addOrUpdateCompany(){
-    if(this.action == 'add'){
-        axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-            location.reload();
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });           
-    }
-    else if(this.action == 'edit'){
-      axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, this.addedOrUpdatedCompany, {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-              console.log('edited');
+    if(this.action == 'edit' || this.action == 'add'){
+      if(constants.validatorEmpty(<Element>this.$refs.inputCompanyName, <Element>this.$refs.errorCompanyName)
+        && constants.validatorEmpty(<Element>this.$refs.inputWebsite, <Element>this.$refs.errorEmptyWebsite)
+        && constants.validatorURL(<Element>this.$refs.inputWebsite, <Element>this.$refs.errorURL)){
 
-              location.reload();
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });
+          if(this.action == 'add'){
+              axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
+                headers: constants.DEFAULT_HEADERS
+                }).then( (response: any) => {
+                  location.reload();
+                })
+                .catch((error: any) => {
+                  console.log(error.response)
+              });           
+          }
+          else if(this.action == 'edit'){
+            axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, this.addedOrUpdatedCompany, {
+                headers: constants.DEFAULT_HEADERS
+                }).then( (response: any) => {
+                    console.log('edited');
+
+                    location.reload();
+                })
+                .catch((error: any) => {
+                  console.log(error.response)
+              });
+          }
+          else 
+            alert('Something went wrong!');
+          
+      }
     }
-    else 
-      alert('Something went wrong!');
   }
 
   private deleteCompany(id: number){
@@ -201,8 +212,14 @@ export default class AdminForm extends Vue{
 }
 </script>
 
-
 <style scoped lang="scss">
+.error{
+  display: none;
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
 h4{
   color: #606060;
 }

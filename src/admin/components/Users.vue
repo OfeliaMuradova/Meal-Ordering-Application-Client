@@ -50,32 +50,47 @@
             
             <div class="row">
               <div class="col">
-                <input type="text" class="form-control user-data" id="" placeholder="Name, Surname" v-model="addedOrUpdatedUser.name">
-                <input type="text" class="form-control user-data" id="" placeholder="Username" v-model="addedOrUpdatedUser.username">
-                <!-- <input type="text" class="form-control user-data" id="" placeholder="Password" v-model="addedOrUpdatedUser.password"> -->
+                <label class="top">Name, Surname</label>
+                <input type="text" class="form-control user-data" ref="inputName" placeholder="Enter name" v-model="addedOrUpdatedUser.name">
+                <label class="error" ref="errorEmptyName">* This field is required</label>
+                <label class="top">Username</label>
+                <input type="text" class="form-control user-data" ref="inputUsername" placeholder="Enter username" v-model="addedOrUpdatedUser.username">
+                <label class="error" ref="errorEmptyUsername">* This field is required</label>
+                <label class="top">E-mail</label>
+                <input type="email" class="form-control user-data" ref="inputEmail" placeholder="Enter email" v-model="addedOrUpdatedUser.email">
+                <label class="error" ref="errorEmptyEmail">* This field is required</label>
+                <label class="error" ref="errorWrongEmail">Please enter a valid email</label>
               </div>
               <div class="col">
-                <input type="text" class="form-control user-data" id="" placeholder="Position" v-model="addedOrUpdatedUser.position">
-                <input type="text" class="form-control user-data" id="" placeholder="E-mail" v-model="addedOrUpdatedUser.email">
-                <input type="text" class="form-control user-data" id="" placeholder="Phone number" v-model="addedOrUpdatedUser.phone_number">
+                <label class="top">Phone number</label>
+                <input type="tel" class="form-control user-data" placeholder="Enter phone" ref="inputPhone" v-model="addedOrUpdatedUser.phone_number">
+                <label class="error" ref="errorEmptyPhone">* This field is required</label>
+                <label class="top">Position</label>
+                <input type="text" class="form-control user-data" placeholder="Enter position" ref="inputPosition" v-model="addedOrUpdatedUser.position">
+                <label class="error" ref="errorEmptyPosition">* This field is required</label>
+                <label class="top" v-if="action=='add'">Password</label>
+                <input type="password" v-if="action=='add'" class="form-control user-data" placeholder="Enter password" ref="inputPassword" v-model="addedOrUpdatedUser.password">
+                <label class="error" ref="errorEmptyPassword">* This field is required</label>
               </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="exampleRadios" id="checkUser" value="USER" checked v-model="addedOrUpdatedUser.userRole.name">
-              <label class="form-check-label" for="exampleRadios1">
-                User
-              </label>
+            <div class="checkboxes">
+              <div class="form-check">
+                <input class="form-check-input" checked type="radio" name="exampleRadios" id="checkUser" value="USER" v-model="addedOrUpdatedUser.userRole.name">
+                <label class="form-check-label" for="exampleRadios1">
+                  User
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="checkAdmin" value="ADMIN" v-model="addedOrUpdatedUser.userRole.name">
+                <label class="form-check-label" for="exampleRadios2">
+                  Admin
+                </label>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="exampleRadios" id="checkAdmin" value="ADMIN" v-model="addedOrUpdatedUser.userRole.name">
-              <label class="form-check-label" for="exampleRadios2">
-                Admin
-              </label>
-            </div><!-- row -->
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="constants.reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateUser">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateUser">Submit</button>
           </div>
@@ -117,36 +132,49 @@ export default class Users extends Vue{
   };
 
   private addOrUpdateUser(){
-    if(this.action == 'add'){
-      if(this.addedOrUpdatedUser.userRole.name == 'USER')
-        this.addedOrUpdatedUser.userRole.id = 2;
-      else if(this.addedOrUpdatedUser.userRole.name == 'ADMIN')
-        this.addedOrUpdatedUser.userRole.id = 1;
-      else { 
-        alert('Wrong user role!');
-      }
+    if(this.action == 'edit' || this.action == 'add'){
+      if(constants.validatorEmpty(<Element>this.$refs.inputName, <Element>this.$refs.errorEmptyName)
+        && constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorEmptyUsername)
+        && constants.validatorEmpty(<Element>this.$refs.inputEmail, <Element>this.$refs.errorEmptyEmail)
+        && constants.validatorEmpty(<Element>this.$refs.inputPhone, <Element>this.$refs.errorEmptyPhone)
+        && constants.validatorEmpty(<Element>this.$refs.inputPosition, <Element>this.$refs.errorEmptyPosition)
+        && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorEmptyPassword)){
+      
+          if(this.action == 'add'){
+            if(this.addedOrUpdatedUser.userRole.name == 'USER'){
+              this.addedOrUpdatedUser.userRole.id = 2;
+            }
+            else if(this.addedOrUpdatedUser.userRole.name == 'ADMIN'){
+              this.addedOrUpdatedUser.userRole.id = 1;
+            }
+            else { 
+              alert('Wrong user role!');
+            }
 
-      axios.post(constants.SERVERURL + '/admin/users/', this.addedOrUpdatedUser, {
-        headers: constants.DEFAULT_HEADERS
-        }).then( (response: any) => {
-          location.reload();
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });           
+            axios.post(constants.SERVERURL + '/admin/users/', this.addedOrUpdatedUser, {
+              headers: constants.DEFAULT_HEADERS
+              }).then( (response: any) => {
+                location.reload();
+              })
+              .catch((error: any) => {
+                console.log(error.response)
+            });           
+          }
+          else if(this.action == 'edit'){
+            axios.put(constants.SERVERURL + '/admin/users/' + this.addedOrUpdatedUserID, this.addedOrUpdatedUser, {
+                headers: constants.DEFAULT_HEADERS
+                }).then( (response: any) => {
+                    location.reload();
+                })
+                .catch((error: any) => {
+                  console.log(error.response)
+              });
+          }
+          else 
+            alert('Something went wrong!');
+
+      }
     }
-    else if(this.action == 'edit'){
-      axios.put(constants.SERVERURL + '/admin/users/' + this.addedOrUpdatedUserID, this.addedOrUpdatedUser, {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-              location.reload();
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });
-    }
-    else 
-      alert('Something went wrong!');
   }
 
   private deleteUser(id: number){
@@ -175,8 +203,8 @@ export default class Users extends Vue{
       email: '',
       phone_number: '',
       userRole: {
-        id: -1,
-        name: ''
+        id: 2,
+        name: 'USER'
       }
     };
   }
@@ -188,12 +216,27 @@ export default class Users extends Vue{
     this.addedOrUpdatedUserID = id;
   }
 
-
 }
 </script>
 
 
 <style scoped lang="scss">
+.error{
+  display: none;
+  color: red;
+  font-size: 14px;
+  margin-bottom: 0;
+  margin-top: 2px;
+}
+
+.top{
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.checkboxes{
+  margin-top: 20px;
+}
 
 #imgDelete{
   cursor: pointer; 
@@ -231,10 +274,6 @@ tr:after {
   display: block;
   visibility: hidden;
   clear: both;
-}
-
-.user-data{
-  margin: 15px 0;
 }
 
 .scroll{

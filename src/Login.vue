@@ -6,24 +6,26 @@
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
             <div class="card-body">
-              <h5 class="card-title text-center">Sign In</h5>
+              <h5 class="card-title text-center">Welcome</h5>
 
               <form class="form-signin" method="post" action="login" >
                 <div class="form-label-group">
                   <label for="inputUsername">Username</label>
-                  <input type="text" id="inputUsername" class="form-control" :data-state="usernameState" autofocus>  <!--v-model="username"-->
+                  <input type="text" id="inputUsername" ref="inputUsername" class="form-control" :data-state="usernameState" autofocus>  <!--v-model="username"-->
+                  <label id="errorUsername" ref="errorUsername">Please enter a username!</label>
                 </div>
 
                 <div class="form-label-group">
                    <label for="inputPassword">Password</label>
-                   <input type="password" id="inputPassword" class="form-control" :data-state="passwordState" > <!--v-model="password"-->
+                   <input type="password" id="inputPassword" ref="inputPassword" class="form-control" :data-state="passwordState" > <!--v-model="password"-->
+                   <label id="errorPassword" ref="errorPassword">Please enter a password!</label>
                 </div>
-
+<!--
                 <div class="custom-control custom-checkbox mb-3">
                   <input type="checkbox" class="custom-control-input" id="customCheck1">
                   <label class="custom-control-label" for="customCheck1">Remember me</label>
                 </div>
-
+-->
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login" type="button">Sign in</button>
               </form>
             </div>
@@ -47,54 +49,48 @@ import * as constants from '@/constants.ts';
 export default class Login extends Vue{
   private username: string = '';
   private password : string = '';
-  private rememberMeChecked: boolean = false;
   private usernameState: string = '';
   private passwordState: string = '';
 
   private login() {
-    // if(this.username.trim() == null || this.username.trim() == ''){
-    //   this.usernameState = 'invalid';
-    // }
-    // else if(this.password.trim() == null || this.password.trim() == ''){
-    //   this.passwordState = 'invalid';
-    // }
-    // else{
-      var data = {
-        //username: this.username,
-        //password: this.password
-        username: 'admin',
-        password: 'admin'
-      }
+    //todo: uncommment
+    //if(constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorUsername)
+    //    && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorPassword) ){
+  
+        var data = {
+          //username: this.username,
+          //password: this.password
+          username: 'admin',
+          password: 'admin'
+        }
 
-      axios.post( constants.SERVERURL + '/login', data, {
-        headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'crossDomain': true,
-          }
-        }).then( (response: any) => {
-            constants.set_cookie("access_token", response.data.token);
-            this.$router.replace({ name: "slider" });
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });
-    // }
+        axios.post( constants.SERVERURL + '/login', data, {
+          headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'crossDomain': true,
+            }
+          }).then( (response: any) => {
+              constants.set_cookie("access_token", response.data.token);
+              this.$router.replace({ name: "slider" });
+          })
+          .catch((error: any) => {
+            console.log(error.response)
+        });
+
+    //} 
 
   }
 
 }
 </script>
 
-
 <style scoped lang="scss">
-  input#inputUsername[data-state="invalid"] {
-    border-color: hsl(0, 76%, 50%);;
-  }
-
-  input#inputPassword[data-state="invalid"] {
-    border-color: hsl(0, 76%, 50%);;
+  #errorUsername, #errorPassword{
+    display: none;
+    color: red;
+    font-size: 14px;
   }
 
   .card-signin {

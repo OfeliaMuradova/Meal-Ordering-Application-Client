@@ -74,7 +74,7 @@
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="constants.reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateUser">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateUser">Submit</button>
           </div>
@@ -211,6 +211,12 @@ export default class Orders extends Vue{
 
 
 <style scoped lang="scss">
+.error{
+  display: none;
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
 
 #imgDelete{
   cursor: pointer; 
