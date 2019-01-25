@@ -69,13 +69,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Watch } from "vue-property-decorator";
+import { Component, Watch, Prop } from "vue-property-decorator";
 import axios from 'axios';
 import * as constants from '@/constants.ts';
+import { User } from '@/types.ts';
 
 @Component({})
 export default class AdminPanel extends Vue{
-  private list: any = [];
+  private list: any = []; 
 
   get componentName() {
     if (this.$route.name === 'adminMenus') { return 'menus' }
@@ -108,7 +109,6 @@ export default class AdminPanel extends Vue{
     }
 
     if (route.name === 'adminOrders') { 
-      debugger;
       // axios.get(constants.SERVERURL + '/admin/orders/list', {
       //   headers: constants.DEFAULT_HEADERS,
       //   params: {

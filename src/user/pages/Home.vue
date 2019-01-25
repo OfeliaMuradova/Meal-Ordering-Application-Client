@@ -62,33 +62,6 @@ import * as constants from '@/constants.ts'
 @Component({})
 export default class Home extends Vue{
 
-	private user = {
-    name: '',
-    email: '',
-    phone: '',
-    location: ''
-	}
-	
-	private showEditButton = false;
-
-  created(){
-    this.user.name = 'Mike Wasovski';
-    this.user.email = 'dbegetghrtgrg@c4u.de';
-    this.user.phone = '0170 598 9580';
-		this.user.location = 'Chemnitz, Germany';
-  }
-
-  /*private managePages() {
-    if(this.$route.params.page == "contact"){
-			this.showEditButton = false;
-		}
-    else if(this.$route.params.page == "profile")
-			this.showEditButton = true;
-
-		this.$root.$emit('managePages', this.user, this.showEditButton);
-	}
-	*/
-
 	private logout() {
 		try{
 			constants.delete_cookie('access_token');
@@ -101,7 +74,6 @@ export default class Home extends Vue{
 
 }
 </script>
-
 
 
 <style lang="scss" scoped>

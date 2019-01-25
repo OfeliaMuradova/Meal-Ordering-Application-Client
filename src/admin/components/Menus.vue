@@ -267,9 +267,6 @@ th, td{
 
 label{
   margin-top: 15px;
-}
-
-label{
   margin-bottom: 3px;
   color: #46484a;
 }

@@ -44,6 +44,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios';
 import * as constants from '@/constants.ts';
+import { User } from "@/types.ts";
 
 @Component({})
 export default class Login extends Vue{
@@ -51,13 +52,27 @@ export default class Login extends Vue{
   private password : string = '';
   private usernameState: string = '';
   private passwordState: string = '';
+  private user: User = {
+    id: null,
+    name: '',
+    username: '',
+    email: '',
+    password: '',
+    position: '',
+    phone_number: '',
+    userRole: {
+      id: null,
+      name: ''
+    }
+  };
 
   private login() {
     //todo: uncommment
+
     //if(constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorUsername)
     //    && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorPassword) ){
-  
-        var data = {
+
+        let data = {
           //username: this.username,
           //password: this.password
           username: 'admin',
@@ -72,11 +87,25 @@ export default class Login extends Vue{
                 'crossDomain': true,
             }
           }).then( (response: any) => {
+              this.user = {
+                id: response.data.id,
+                name: response.data.name,
+                username: response.data.username,
+                email: response.data.email,
+                position: response.data.position,
+                phone_number: response.data.phone_number,
+                userRole: {
+                  id: response.data.userRole.id,
+                  name: response.data.userRole.name
+                }
+              }
+
               constants.set_cookie("access_token", response.data.token);
-              
-              if(response.data.userRole.name == "USER")           
-                this.$router.replace({ name: "slider" });
-              else if(response.data.userRole.name == "ADMIN")              
+              constants.set_cookie("user", JSON.stringify(this.user));
+
+              if(this.user.userRole.name == "USER")          
+                this.$router.replace({ name: "slider"});
+              else if(this.user.userRole.name == "ADMIN")              
                 this.$router.replace({ name: "admin" });
               else{
                 alert('Something went wrong!');
@@ -86,6 +115,7 @@ export default class Login extends Vue{
           })
           .catch((error: any) => {
             console.log(error.response)
+            this.$router.replace({ name: "login" });
         });
 
     //} 

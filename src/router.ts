@@ -28,6 +28,7 @@ let router = new Router({
           requiresAuth: true,
           admin: false
         },
+        props: true,
         children: [
           {
             path: '',
@@ -36,7 +37,8 @@ let router = new Router({
             meta: { 
               requiresAuth: true,
               admin: false
-            }
+            },
+            props: true,
           },
           {
             path: '/menus',
@@ -67,6 +69,7 @@ let router = new Router({
           requiresAuth: true,
           admin: true
         },
+        props: true,
         children: [
           {
             path: 'orders',
@@ -75,7 +78,8 @@ let router = new Router({
             meta: { 
               requiresAuth: true,
               admin: true
-            }
+            },
+            props: true,
           },
           {
             path: 'companies',

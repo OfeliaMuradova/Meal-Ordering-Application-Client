@@ -19,17 +19,24 @@ export function getCookie(name:string) {
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
+export function getObjectCookie(name: string){
+  let result = document.cookie.match(new RegExp(name + '=([^;]+)'));
+  return JSON.parse(result[1]);
+}
+
 export function delete_cookie(name:string) {
   document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
-export function validatorEmpty(element: Element, label: any){
+export function validatorEmpty(element: Element, label?: any){
   if((<HTMLInputElement>element).value.trim()== ""){
-    label.style.display = 'block';
+    if(label != null)
+      label.style.display = 'block';
     (<HTMLInputElement>element).focus();
     return false;
   }	
-  label.style.display = 'none';
+  if(label != null)
+    label.style.display = 'none';
   return true;
 }
 

@@ -7,13 +7,14 @@ export interface Meal{
 }
 
 export interface User{
+  id?: number,
   name: string,
   username: string,
   password?: string,
   position: string,
   email: string,
   phone_number: string,
-  userRole: UserRole
+  userRole?: UserRole
 }
 
 export interface Order{
