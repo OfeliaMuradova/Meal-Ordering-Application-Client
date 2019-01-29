@@ -7,6 +7,7 @@ import Order from '@/user/pages/Order.vue'
 import Menus from '@/user/pages/Menus.vue'
 import Profile from '@/user/components/Profile.vue'
 import Slider from '@/user/components/Slider.vue'
+import Contact from '@/user/components/Contact.vue'
 
 import AdminPanel from '@/admin/AdminPanel.vue'
 import AdminForm from '@/admin/components/AdminForm.vue'
@@ -57,7 +58,25 @@ let router = new Router({
               requiresAuth: true,
               admin: false
             }
-          }
+          },
+          {
+            path: 'profile',
+            name: 'profile',
+            component: Profile,
+            meta: { 
+              requiresAuth: true,
+              admin: false
+            },
+          },
+          {
+            path: 'contact',
+            name: 'contact',
+            component: Contact,
+            meta: { 
+              requiresAuth: true,
+              admin: false
+            },
+          },
         ]
       },
       {
@@ -125,6 +144,15 @@ let router = new Router({
               requiresAuth: true,
               admin: true
             },
+          },
+          {
+            path: '/order',
+            name: 'adminOrder',
+            component: Order,
+            meta: { 
+              requiresAuth: true,
+              admin: true
+            }
           },
         ]
       },

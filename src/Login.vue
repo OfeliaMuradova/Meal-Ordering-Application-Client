@@ -71,12 +71,13 @@ export default class Login extends Vue{
 
     //if(constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorUsername)
     //    && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorPassword) ){
-
         let data = {
           //username: this.username,
           //password: this.password
+          // username: 'admin',
+          // password: 'admin1'
           username: 'admin',
-          password: 'admin'
+          password: 'admin1'
         }
 
         axios.post( constants.SERVERURL + '/login', data, {
@@ -99,7 +100,7 @@ export default class Login extends Vue{
                   name: response.data.userRole.name
                 }
               }
-
+              debugger;
               constants.set_cookie("access_token", response.data.token);
               constants.set_cookie("user", JSON.stringify(this.user));
 

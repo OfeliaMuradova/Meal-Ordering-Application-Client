@@ -15,7 +15,7 @@
           <tr class="d-flex" v-for="(menu, index) in list" v-bind:key="index">
             <th scope="row" class="col-1">{{ index + 1 }} </th>
             <td class="col-4 scrollable"><a :href="menu.path" target="_blank">{{ menu.path }}</a></td>
-            <td class="col-3 scrollable">{{ menu.weekNum }}</td>
+            <td class="col-3 scrollable"> {{ getWeekNumber(menu.validFrom) }} </td>
             <td class="col-3 scrollable">{{ menu.company.name }}</td>
             <td class="col-1" align="right">  
               <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addMenusModal" @click="prepareEdit(menu, menu.id)">
@@ -105,6 +105,11 @@ export default class Menus extends Vue{
       menus: []
     }
   };
+
+  private getWeekNumber(from: any){
+    debugger;
+    return constants.getWeekNumber(from);
+  }
 
   private addOrUpdateMenu(){
     if(constants.validatorEmpty(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorEmptyPath)
@@ -203,6 +208,7 @@ export default class Menus extends Vue{
   }
 
   private prepareEdit(menu: Menu, id: number){
+    debugger;
     this.action = 'edit';
     this.addedOrUpdatedMenu = menu;
     this.addedOrUpdatedMenuID = id;

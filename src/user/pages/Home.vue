@@ -14,28 +14,28 @@
 						<router-link :to="{ name: 'slider'}" tag="li" active-class="nav-item active">
 							<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 						</router-link>
-						<router-link :to="{ name: 'menus'}" tag="li" active-class="nav-item">
+						<!-- <router-link :to="{ name: 'menus'}" tag="li" active-class="nav-item">
 							<a class="nav-link" href="#">Menus</a>
-						</router-link>
+						</router-link> -->
 						<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
 							<a class="nav-link" href="#">Order</a>
 						</router-link>
-						<!--<router-link :to="{ path: '/contact', params: { page: 'contact' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
+						<router-link :to="{ name: 'contact', params: { page: 'contact' }}" tag="li" active-class="nav-item">
 							<a class="nav-link" href="#">Contact</a>
-						</router-link>-->
+						</router-link>
 					</ul>
 
 					<ul class="navbar-nav ml-auto" id="bootstrap-overrides-right">
-							<!--<router-link :to="{ path: '/my-orders'}" tag="li" active-class="nav-item">
-								<a class="nav-link" href="#">Shopping cart
-								<img id="cart" src="@/assets/cart.png">
+							<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
+								<a class="nav-link" href="#">Order
+								<img class="icon" src="@/assets/order.png">
 								</a>
 							</router-link>
-							<router-link :to="{ path: '/profile', params: { page: 'profile' }}" v-on:click.native="managePages()" tag="li" active-class="nav-item">
+							<router-link :to="{ name: 'profile'}" tag="li" active-class="nav-item">
 								<a class="nav-link" href="#">Profile
-								<img id="cart" src="@/assets/avatar.png">
+								<img class="icon" src="@/assets/avatar.png">
 								</a>
-							</router-link>-->
+							</router-link>
 							<router-link :to="{ path: '/login'}" tag="li" v-on:click.native="logout()" active-class="nav-item">
 								<a class="nav-link" href="#">Logout
 									<img id="cart" src="@/assets/logout.png">
@@ -92,6 +92,32 @@ export default class Home extends Vue{
 
 .nav-link{
 	font-size: 18px;
+}
+
+#left-nav a{
+  color: rgba(0, 0, 0, 0.5);
+}
+
+#bootstrap-overrides-right .nav-link {
+	margin: 0 5px;
+}
+
+.icon{
+  width: 23px;
+  height: 23px;
+}
+
+.nav-link{
+  font-size: 18px;
+  padding: 15px 40px; 
+}
+
+#navbarWEX:first-child{
+  padding-top: 20px;  
+}
+
+#content{
+  padding-top: 36px!important;
 }
 
 @media only screen and (max-width: 959px) {}

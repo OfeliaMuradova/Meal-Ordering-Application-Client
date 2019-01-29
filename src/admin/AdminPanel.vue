@@ -10,7 +10,7 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto" id="bootstrap-overrides-right">
-            <router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
+            <router-link :to="{ name: 'adminOrder'}" tag="li" active-class="nav-item">
               <a class="nav-link" href="#">Order
               <img class="icon" src="@/assets/order.png">
               </a>
@@ -50,9 +50,9 @@
                         <router-link :to="{ name: 'users'}" tag="li" active-class="nav-item">
                           <a class="nav-link" href="#">Users</a>
                         </router-link>              
-                        <router-link :to="{ name: ''}" tag="li" active-class="nav-item ">
+                        <!-- <router-link :to="{ name: ''}" tag="li" active-class="nav-item ">
                           <a class="nav-link" href="#">Contents</a>
-                        </router-link>              
+                        </router-link> -->
                     </div>
                 </div>
             </nav>

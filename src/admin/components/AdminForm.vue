@@ -22,7 +22,7 @@
           <tr class="d-flex" v-for="(company, index) in list" v-bind:key="index">
             <th scope="row" class="col-1">{{ index + 1 }} </th>
             <td class="col-3 scrollable">{{ company.name }}</td>
-            <td class="col-7 scrollable">{{ company.webPageUrl }}</td>
+            <td class="col-7 scrollable"><a :href="company.webPageUrl" target="_blank">{{ company.webPageUrl }}</a></td>
             <td class="col-1" align="right">  
               <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addCompaniesModal" @click="prepareEdit(company, company.id)">
               <img id="imgDelete" src="@/assets/delete1.png" @click="deleteCompany(company.id)">

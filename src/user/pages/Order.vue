@@ -1,8 +1,6 @@
 <template>
   <div class="order">
-    
-
-    <div class="container">
+    <div class="container" style="margin-top: 50px;">
       <div class="row">
         <div class="heading">
           <h2>Place your order</h2>
@@ -92,7 +90,8 @@ export default class Order extends Vue{
 
 <style lang="scss" scoped>
 h2{
-  color: #114148;
+  // color: #114148;
+  color: #666666;
   display: inline;
 }
 

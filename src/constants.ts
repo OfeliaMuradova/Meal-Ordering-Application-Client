@@ -66,3 +66,12 @@ export function validatorNumber(element: Element, label: any){
 export function reload(){
   window.location.reload();
 }
+
+export function getWeekNumber(from: any) {
+  let [year, month, day] = from.split("-");
+  let fromDate = <any>new Date(year, month - 1, day);
+
+  let firstDayOfYear = <any>new Date(year, 0, 1);
+  let pastDaysOfYear = (fromDate - firstDayOfYear) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+}

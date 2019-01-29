@@ -98,7 +98,8 @@
       </div>
     </div>
 
-
+    <modal-dialog v-if="showModal" :modalText=modalText></modal-dialog>
+    
   </div>
 </template>
 
@@ -110,14 +111,20 @@ import { Prop } from 'vue-property-decorator';
 import * as constants from '@/constants.ts';
 import axios from 'axios';
 import { User } from '@/types';
+import Modal from '@/Modal.vue';
 
-@Component({})
+@Component({
+  components: {
+    'modal-dialog': Modal
+  }
+})
 export default class Users extends Vue{
   @Prop() list: any;
 
+  private showModal: boolean = false;
+  private modalText: string = '';
   private action: string = '';
   private addedOrUpdatedUserID: number = -1;
-
   private addedOrUpdatedUser: User = {
     name: '',
     username: '',
@@ -137,30 +144,33 @@ export default class Users extends Vue{
         && constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorEmptyUsername)
         && constants.validatorEmpty(<Element>this.$refs.inputEmail, <Element>this.$refs.errorEmptyEmail)
         && constants.validatorEmpty(<Element>this.$refs.inputPhone, <Element>this.$refs.errorEmptyPhone)
-        && constants.validatorEmpty(<Element>this.$refs.inputPosition, <Element>this.$refs.errorEmptyPosition)
-        && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorEmptyPassword)){
+        && constants.validatorEmpty(<Element>this.$refs.inputPosition, <Element>this.$refs.errorEmptyPosition)){
       
           if(this.action == 'add'){
-            if(this.addedOrUpdatedUser.userRole.name == 'USER'){
-              this.addedOrUpdatedUser.userRole.id = 2;
-            }
-            else if(this.addedOrUpdatedUser.userRole.name == 'ADMIN'){
-              this.addedOrUpdatedUser.userRole.id = 1;
-            }
-            else { 
-              alert('Wrong user role!');
-            }
+            if(constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorEmptyPassword)){
 
-            axios.post(constants.SERVERURL + '/admin/users/', this.addedOrUpdatedUser, {
-              headers: constants.DEFAULT_HEADERS
-              }).then( (response: any) => {
-                location.reload();
-              })
-              .catch((error: any) => {
-                console.log(error.response)
-            });           
+              if(this.addedOrUpdatedUser.userRole.name == 'USER'){
+                this.addedOrUpdatedUser.userRole.id = 2;
+              }
+              else if(this.addedOrUpdatedUser.userRole.name == 'ADMIN'){
+                this.addedOrUpdatedUser.userRole.id = 1;
+              }
+              else { 
+                alert('Wrong user role!');
+              }
+
+              axios.post(constants.SERVERURL + '/admin/users/', this.addedOrUpdatedUser, {
+                headers: constants.DEFAULT_HEADERS
+                }).then( (response: any) => {
+                  location.reload();
+                })
+                .catch((error: any) => {
+                  console.log(error.response)
+              });           
+            }
           }
           else if(this.action == 'edit'){
+            debugger;
             axios.put(constants.SERVERURL + '/admin/users/' + this.addedOrUpdatedUserID, this.addedOrUpdatedUser, {
                 headers: constants.DEFAULT_HEADERS
                 }).then( (response: any) => {
@@ -172,7 +182,6 @@ export default class Users extends Vue{
           }
           else 
             alert('Something went wrong!');
-
       }
     }
   }
@@ -210,10 +219,16 @@ export default class Users extends Vue{
   }
 
   private prepareEdit(user: User, id: number){
-    debugger;
-    this.action = 'edit';
-    this.addedOrUpdatedUser = user;
-    this.addedOrUpdatedUserID = id;
+    if(user.userRole.name == "ADMIN"){
+      debugger;
+      this.showModal = true;
+      this.modalText = "You can't edit other administrator's data!";
+    }
+    else{
+      this.action = 'edit';
+      this.addedOrUpdatedUser = user;
+      this.addedOrUpdatedUserID = id;
+    }
   }
 
 }

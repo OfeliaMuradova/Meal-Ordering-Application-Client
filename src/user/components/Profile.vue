@@ -130,6 +130,7 @@ export default class Profile extends Vue{
   }
 
   private editUserProfile(){
+    debugger;
     axios.put(constants.SERVERURL + '/user/' + this.user.id, this.user, {
       headers: constants.DEFAULT_HEADERS
       }).then( (response: any) => {
@@ -143,25 +144,23 @@ export default class Profile extends Vue{
   }
 
   private changePassword(){
-    debugger;
-    console.log(this.oldPassword);
-    console.log(this.newPassword);
-    console.log(this.repeatedPassword);
-
     if( ((<HTMLInputElement>this.$refs.inputOldPassword).value.trim() == "") ||
         ((<HTMLInputElement>this.$refs.inputNewPassword).value.trim() == "") ||
         ((<HTMLInputElement>this.$refs.inputRepeatedPassword).value.trim() == "")) {
           alert('empty!')
     }
     else{
-      if((<HTMLInputElement>this.$refs.inputNewPassword).value === (<HTMLInputElement>this.$refs.inputRepeatedPassword).value){
+      if((<HTMLInputElement>this.$refs.inputNewPassword).value !== (<HTMLInputElement>this.$refs.inputRepeatedPassword).value){
+        alert("Passwords should match");
+      }
+      else{
+        debugger;
         axios.post(constants.SERVERURL + '/user/changePassword/' + this.user.id, { oldPassword: this.oldPassword, newPassword: this.newPassword }, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
           debugger;
-          //constants.delete_cookie('user');
-          //constants.set_cookie("user", JSON.stringify(this.user));
-          //location.reload();
+          alert("Password successfully changed!");
+          location.reload();
         })
         .catch((error: any) => {
           console.log(error.response)
