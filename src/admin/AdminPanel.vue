@@ -109,18 +109,17 @@ export default class AdminPanel extends Vue{
     }
 
     if (route.name === 'adminOrders') { 
-      // axios.get(constants.SERVERURL + '/admin/orders/list', {
-      //   headers: constants.DEFAULT_HEADERS,
-      //   params: {
-      //       name: 'Pending'
-      //     }
-      //   }).then( (response: any) => {
-      //     debugger;
-      //     this.list = response.data;
-      //   })
-      //   .catch((error: any) => {
-      //     console.log(error.response)
-      // });
+      axios.get(constants.SERVERURL + '/admin/orders/list', {
+        headers: constants.DEFAULT_HEADERS,
+        params: {
+            name: 'Pending'
+          }
+        }).then( (response: any) => {
+          this.list = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
     }
 
     if (route.name === 'users') { 

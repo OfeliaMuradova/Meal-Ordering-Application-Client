@@ -1,87 +1,122 @@
 <template>
-  <div id="users" class="container-fluid">
+  <div id="orders" class="container-fluid">
 
-    <div class="scroll">
-      <table id="userTable" class="table table-hover table-striped">
-        <thead>
-          <tr class="d-flex">
-            <th scope="col" class="col-1"></th>
-            <th scope="col" class="col-2">Name</th>
-            <th scope="col" class="col-2">Username</th>
-            <th scope="col" class="col-2">Position</th>
-            <th scope="col" class="col-2">Email</th>
-            <th scope="col" class="col-2">Phone</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="d-flex" v-for="(user, index) in list" v-bind:key="index">
-            <th scope="row" class="col-1">{{ index + 1 }} </th>
-            <td class="col-2 scrollable">{{ user.name }}</td>
-            <td class="col-2 scrollable">{{ user.username }}</td>
-            <td class="col-2 scrollable">{{ user.position }}</td>
-            <td class="col-2 scrollable">{{ user.email }}</td>
-            <td class="col-2 scrollable">{{ user.phone_number }}</td>
-            <td class="col-1" align="right">  
-              <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addUserModal" @click="prepareEdit(user, user.id)">
-              <img id="imgDelete" src="@/assets/delete1.png" @click="deleteUser(user.id)">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addUserModal" @click="prepareAdd()">
-      Add user
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 v-if="action == 'add'" class="modal-title" id="exampleModalLabel">New user: </h5>
-            <h5 v-else-if="action == 'edit'" class="modal-title" id="exampleModalLabel">Edit user: </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-pending-tab" data-toggle="tab" href="#nav-pending" role="tab" aria-controls="nav-pending" aria-selected="true" @click="getPendingOrders()" >Pending</a>
+        <a class="nav-item nav-link" id="nav-confirmed-tab" data-toggle="tab" href="#nav-confirmed" role="tab" aria-controls="nav-confirmed" aria-selected="false" @click="getConfirmedOrders()">Confirmed</a>
+        <a class="nav-item nav-link" id="nav-cancelled-tab" data-toggle="tab" href="#nav-cancelled" role="tab" aria-controls="nav-cancelled" aria-selected="false" @click="getCancelledOrders()">Cancelled</a>
+      </div>
+    </nav>
+    <!-- Pending -->
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
+        <div class="scroll">
+          <table id="orderTable" class="table table-hover table-striped">
+            <thead>
+              <tr class="d-flex">
+                <th scope="col" class="col-1"></th>
+                <th scope="col" class="col-2">Customer</th>
+                <th scope="col" class="col-3">Order text</th>
+                <th scope="col" class="col-3">Menu</th>
+                <th scope="col" class="col-2">Week day</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="d-flex" v-for="(order, index) in updatedList" v-bind:key="index">
+              <!-- <tr class="d-flex" v-for="(order, index) in list" v-bind:key="index"> -->
+                <th scope="row" class="col-1">{{ index + 1 }} </th>
+                <td class="col-2 scrollable">{{ order.order.user.name }}</td>
+                <td class="col-3 scrollable">{{ order.orderText }}</td>
+                <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
+                <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
+                <td class="col-1" align="right">  
+                  <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)">
+                  <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Confirmed -->
+      <div class="tab-pane fade" id="nav-confirmed" role="tabpanel" aria-labelledby="nav-confirmed-tab">
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
+            <div class="scroll">
+              <table id="orderTable" class="table table-hover table-striped">
+                <thead>
+                  <tr class="d-flex">
+                    <th scope="col" class="col-1"></th>
+                    <th scope="col" class="col-2">Customer</th>
+                    <th scope="col" class="col-3">Order text</th>
+                    <th scope="col" class="col-3">Menu</th>
+                    <th scope="col" class="col-2">Week day</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="d-flex" v-for="(order, index) in updatedList" v-bind:key="index">
+                    <th scope="row" class="col-1">{{ index + 1 }} </th>
+                    <td class="col-2 scrollable">{{ order.order.user.name }}</td>
+                    <td class="col-3 scrollable">{{ order.orderText }}</td>
+                    <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
+                    <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
+                    <td class="col-1" align="right">  
+                      <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)">
+                      <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="modal-body">
-            
-            <div class="row">
-              <div class="col">
-                <input type="text" class="form-control user-data" id="" placeholder="Name, Surname" v-model="addedOrUpdatedUser.name">
-                <input type="text" class="form-control user-data" id="" placeholder="Username" v-model="addedOrUpdatedUser.username">
-              </div>
-              <div class="col">
-                <input type="text" class="form-control user-data" id="" placeholder="Position" v-model="addedOrUpdatedUser.position">
-                <input type="text" class="form-control user-data" id="" placeholder="E-mail" v-model="addedOrUpdatedUser.email">
-                <input type="text" class="form-control user-data" id="" placeholder="Phone number" v-model="addedOrUpdatedUser.phone_number">
-              </div>
+        </div>
+      </div>
+      <!-- Cancelled -->
+      <div class="tab-pane fade" id="nav-cancelled" role="tabpanel" aria-labelledby="nav-cancelled-tab">
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
+            <div class="scroll">
+              <table id="orderTable" class="table table-hover table-striped">
+                <thead>
+                  <tr class="d-flex">
+                    <th scope="col" class="col-1"></th>
+                    <th scope="col" class="col-2">Customer</th>
+                    <th scope="col" class="col-3">Order text</th>
+                    <th scope="col" class="col-3">Menu</th>
+                    <th scope="col" class="col-2">Week day</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="d-flex" v-for="(order, index) in updatedList" v-bind:key="index">
+                    <th scope="row" class="col-1">{{ index + 1 }} </th>
+                    <td class="col-2 scrollable">{{ order.order.user.name }}</td>
+                    <td class="col-3 scrollable">{{ order.orderText }}</td>
+                    <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
+                    <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
+                    <td class="col-1" align="right">  
+                      <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)">
+                      <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="exampleRadios" id="checkUser" value="USER" checked v-model="addedOrUpdatedUser.userRole.name">
-              <label class="form-check-label" for="exampleRadios1">
-                User
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="exampleRadios" id="checkAdmin" value="ADMIN" v-model="addedOrUpdatedUser.userRole.name">
-              <label class="form-check-label" for="exampleRadios2">
-                Admin
-              </label>
-            </div><!-- row -->
-          </div> <!-- modal-body -->
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="constants.reload()">Cancel</button>
-            <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateUser">Add</button>
-            <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateUser">Submit</button>
           </div>
         </div>
       </div>
     </div>
 
+
+    <!-- Modal -->
+      <!-- <b-modal id="modalConfirm" centered hide-header hide-footer ok-variant="info">
+        <p class="my-4 modalContent">Confirm this order?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" @click="confirmOrder()">Confirm</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="reload()">Cancel</button>
+        </div>
+      </b-modal> -->
+    
 
   </div>
 </template>
@@ -99,10 +134,11 @@ import { Order } from '@/types';
 export default class Orders extends Vue{
   @Prop() list: any;
 
-  private action: string = '';
-  private addedOrUpdatedOrderID: number = null;
+  private updatedList: Array<Order> = [];
+  private orderStatusImage: string = '';
+  private currentOrderID: number = null;
   //private addedOrUpdatedOrder = {} as Order;
-  private addedOrUpdatedOrder: Order = {
+  private currentOrder: Order = {
     order_text: '',
     confirmer: {
       name: '',
@@ -127,83 +163,106 @@ export default class Orders extends Vue{
     }
   };
 
-  private addOrUpdateUser(){
-    if(this.action == 'add'){
-      
-      axios.post(constants.SERVERURL + '/admin/orders/', this.addedOrUpdatedOrder, {
-        headers: constants.DEFAULT_HEADERS
-        }).then( (response: any) => {
-          location.reload();
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-      });           
-    }
-    else if(this.action == 'edit'){
-      axios.put(constants.SERVERURL + '/admin/orders/' + this.addedOrUpdatedOrderID, this.addedOrUpdatedOrder, {
-          headers: constants.DEFAULT_HEADERS
-          }).then( (response: any) => {
-              location.reload();
-          })
-          .catch((error: any) => {
-            console.log(error.response)
-        });
-    }
-    else 
-      alert('Something went wrong!');
+  mounted(){
+    debugger;
+    this.updatedList = this.list;
   }
 
-  private deleteOrder(id: number){
+  private cancelOrder(order: Order, id: number){
+    // this.currentOrder = order;
+    // this.currentOrderID = id;
+
     debugger;
-    axios.delete(constants.SERVERURL + '/admin/orders/' + id, {
-        headers: constants.DEFAULT_HEADERS
+    // axios.delete(constants.SERVERURL + '/admin/orders/' + id, {
+    //     headers: constants.DEFAULT_HEADERS
+    //     }).then( (response: any) => {
+    //       debugger;
+    //       console.log(response);
+    //       location.reload();
+    //     })
+    //     .catch((error: any) => {
+    //       console.log(error.response)
+    // });
+
+  }
+
+  private confirmOrder(order: Order, id: number){
+    debugger;
+    console.log(order);
+    console.log(id);
+//#region  empty the object to clear the fields in the modal
+
+  //this.currentOrder = { } as Order;
+    this.currentOrder = {
+    order_text: '',
+    confirmer: {
+      name: '',
+      username: '',
+      position: '',
+      password: '',
+      email: '',
+      phone_number: '',
+      userRole: {
+        id: -1,
+        name: ''
+      }
+    },
+    menu: {
+      path: '',
+      weekNum: null,
+      company: {
+        name: '',
+        webPageUrl: '',
+        menus: []
+      }
+    }
+    }
+//#endregion
+
+  }
+
+  private getPendingOrders(){
+    debugger;
+    axios.get(constants.SERVERURL + '/admin/orders/list', {
+        headers: constants.DEFAULT_HEADERS,
+        params: {
+            name: 'Pending'
+          }
         }).then( (response: any) => {
           debugger;
-          console.log(response);
-          location.reload();
+          this.updatedList = response.data;
         })
         .catch((error: any) => {
           console.log(error.response)
       });
   }
 
-  private prepareAdd(){
-    debugger;
-    this.action = 'add';
-
-    //empty the object to clear the fields in the modal
-    //this.addedOrUpdatedOrder = { } as Order;
-    this.addedOrUpdatedOrder = {
-    order_text: '',
-    confirmer: {
-      name: '',
-      username: '',
-      position: '',
-      password: '',
-      email: '',
-      phone_number: '',
-      userRole: {
-        id: -1,
-        name: ''
-      }
-    },
-    menu: {
-      path: '',
-      weekNum: null,
-      company: {
-        name: '',
-        webPageUrl: '',
-        menus: []
-      }
-    }
-  };
+  private getCancelledOrders(){
+    axios.get(constants.SERVERURL + '/admin/orders/list', {
+        headers: constants.DEFAULT_HEADERS,
+        params: {
+            name: 'Cancelled'
+          }
+        }).then( (response: any) => {
+          this.updatedList = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
   }
 
-  private prepareEdit(user: Order, id: number){
-    debugger;
-    this.action = 'edit';
-    this.addedOrUpdatedOrder = user;
-    this.addedOrUpdatedOrderID = id;
+  private getConfirmedOrders(){
+    axios.get(constants.SERVERURL + '/admin/orders/list', {
+        headers: constants.DEFAULT_HEADERS,
+        params: {
+            name: 'Confirmed'
+          }
+        }).then( (response: any) => {
+          this.updatedList = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
   }
 
 }
@@ -218,17 +277,13 @@ export default class Orders extends Vue{
   margin-top: 4px;
 }
 
-#imgDelete{
+.imgDelete{
   cursor: pointer; 
-  width: 17px;
-  height: 17px;
 }
 
-#imgEdit{
+.imgConfirm{
   margin-right: 10px;
   cursor: pointer; 
-  width: 17px;
-  height: 17px;
 }
 
 #form{
@@ -245,6 +300,10 @@ export default class Orders extends Vue{
   }
 }
 
+table{
+  margin-top: 15px;
+}
+
 th, td{
   border: none!important;
 }
@@ -256,8 +315,15 @@ tr:after {
   clear: both;
 }
 
-.user-data{
-  margin: 15px 0;
+.modalContent{
+  font-size: 18px;
+  text-align: center;
+}
+
+.modal-footer{
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .scroll{

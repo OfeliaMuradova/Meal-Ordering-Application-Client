@@ -25,7 +25,7 @@
             <td class="col-7 scrollable"><a :href="company.webPageUrl" target="_blank">{{ company.webPageUrl }}</a></td>
             <td class="col-1" align="right">  
               <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addCompaniesModal" @click="prepareEdit(company, company.id)">
-              <img id="imgDelete" src="@/assets/delete1.png" @click="deleteCompany(company.id)">
+              <img id="imgDelete" src="@/assets/delete.png" @click="deleteCompany(company.id)">
             </td>
           </tr>
         </tbody>
@@ -226,8 +226,8 @@ h4{
 
 #imgDelete{
   cursor: pointer; 
-  width: 17px;
-  height: 17px;
+  // width: 17px;
+  // height: 17px;
 }
 
 #imgEdit{

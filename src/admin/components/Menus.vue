@@ -16,10 +16,10 @@
             <th scope="row" class="col-1">{{ index + 1 }} </th>
             <td class="col-4 scrollable"><a :href="menu.path" target="_blank">{{ menu.path }}</a></td>
             <td class="col-3 scrollable"> {{ getWeekNumber(menu.validFrom) }} </td>
-            <td class="col-3 scrollable">{{ menu.company.name }}</td>
+            <td v-if="menu.company" class="col-3 scrollable">{{ menu.company.name }}</td>
             <td class="col-1" align="right">  
               <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addMenusModal" @click="prepareEdit(menu, menu.id)">
-              <img id="imgDelete" src="@/assets/delete1.png" @click="deleteMenu(menu.id)">
+              <img id="imgDelete" src="@/assets/delete.png" @click="deleteMenu(menu.id)">
             </td>
           </tr>
         </tbody>
@@ -107,7 +107,6 @@ export default class Menus extends Vue{
   };
 
   private getWeekNumber(from: any){
-    debugger;
     return constants.getWeekNumber(from);
   }
 
@@ -242,8 +241,8 @@ export default class Menus extends Vue{
 
 #imgDelete{
   cursor: pointer; 
-  width: 17px;
-  height: 17px;
+  // width: 17px;
+  // height: 17px;
 }
 
 #imgEdit{
