@@ -43,18 +43,18 @@
             </button>
           </div>
           <div class="modal-body">
-            
             <div class="row">
               <div class="col">
                 <label for="inputMenuImagePath">Image Path</label>
                 <input id="inputMenuImagePath" ref="inputMenuImagePath" type="text" class="form-control user-data" v-model="addedOrUpdatedMenu.path" autofocus>
                 <label class="error" ref="errorEmptyPath">* This field is required</label>
                 <label class="error" ref="errorWrongURL">Please enter a valid url</label>
-                <label for="inputMenuWeekNumber">Week number:</label>
-                <input id="inputMenuWeekNumber" ref="inputMenuWeekNumber" type="text" class="form-control user-data" v-model="addedOrUpdatedMenu.weekNum">
-                <label class="error" ref="errorEmptyWeekNumber">* This field is required</label>
-                <label class="error" ref="errorWeekNumber">Please enter a valid number</label>
+                <label for="inputMenuWeekNumber">Week:</label>
 
+                <div class="form-group">
+                  <input type="week" class="form-control" id="weekPicker" min="2019-W01" required v-model="selectedWeek">
+                  <label class="error" ref="errorEmptyWebsite">* This field is required</label>
+                </div> 
                 <label for="companySelect">Company:</label>
                 <select id="companySelect" required class="mb-3" v-model="companyId">
                   <option v-for="(company, index) in companiesList" :key="index" :value="company.id">{{ company.name }}</option>
@@ -66,7 +66,7 @@
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="constants.reload()">Cancel</button>
+            <button type="button" class="btn btn-secondary" @click="reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateMenu">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateMenu">Submit</button>
           </div>
@@ -92,13 +92,15 @@ export default class Menus extends Vue{
   @Prop() list: any;
 
   private action: string = '';
+  private selectedWeek: string = '';
   private addedOrUpdatedMenuID: number = -1;
   private companyId: number = null;
   private companiesList: Array<Company> = [];
   private currentCompanies: any[] = [ ]
   private addedOrUpdatedMenu: Menu = {
     path: '',
-    weekNum: null,
+    validFrom: '',
+    validTo: '',
     company: {
       name: '',
       webPageUrl: '',
@@ -112,39 +114,31 @@ export default class Menus extends Vue{
 
   private addOrUpdateMenu(){
     if(constants.validatorEmpty(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorEmptyPath)
-        && constants.validatorURL(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorWrongURL)
-        && constants.validatorEmpty(<Element>this.$refs.inputMenuWeekNumber, <Element>this.$refs.errorEmptyWeekNumber)
-        && constants.validatorNumber(<Element>this.$refs.inputMenuWeekNumber, <Element>this.$refs.errorWeekNumber)){
-          debugger;
+        && constants.validatorURL(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorWrongURL)){
+
         if(!this.companyId){
           (<any>this.$refs.errorEmptyCompany).style.display = 'block';
         }
         else if(this.action == 'add'){
-          
-          //get selected company object by id
-          axios.get(constants.SERVERURL + '/admin/companies/' + this.companyId + '/edit', {
-              headers: constants.DEFAULT_HEADERS
-              }).then( (response: any) => {
-                //set the company to the menu object
-                this.addedOrUpdatedMenu.company = response.data;
-                
-                //add the menu
-                axios.post(constants.SERVERURL + '/admin/menus/', this.addedOrUpdatedMenu, {
-                  headers: constants.DEFAULT_HEADERS
-                  }).then( (response: any) => {
-                    location.reload();
-                  })
-                  .catch((error: any) => {
-                    console.log(error.response)
-                }); 
+          if(this.selectedWeek) {
+              this.addedOrUpdatedMenu.validFrom = constants.formatDate(constants.getDateOfWeek(this.selectedWeek));
+              this.addedOrUpdatedMenu.validTo = constants.formatDate(constants.getFriday(constants.getDateOfWeek(this.selectedWeek)));
+            }
+              this.addedOrUpdatedMenu.company = {
+                id: this.companyId
+              };
 
-              })
-              .catch((error: any) => {
-                console.log(error.response)
-            });  
-          
+              axios.post(constants.SERVERURL + '/admin/menus/', this.addedOrUpdatedMenu, {
+                headers: constants.DEFAULT_HEADERS
+                }).then( (response: any) => {
+                  location.reload();
+                })
+                .catch((error: any) => {
+                  console.log(error.response)
+              }); 
           }
           else if(this.action == 'edit'){
+            debugger;
             axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
                 headers: constants.DEFAULT_HEADERS
                 }).then( (response: any) => {
@@ -156,10 +150,8 @@ export default class Menus extends Vue{
           }
           else 
             alert('Something went wrong!');
-        
       
     }
-
   }
 
   private deleteMenu(id: number){
@@ -182,7 +174,8 @@ export default class Menus extends Vue{
     //empty the object to clear the fields in the modal
     this.addedOrUpdatedMenu = {
       path: '',
-      weekNum: null,
+      validFrom: '',
+      validTo: '',
       company: {
         name: '',
         webPageUrl: '',
@@ -190,11 +183,12 @@ export default class Menus extends Vue{
       }
     };
     // list the companies
+    debugger;
     axios.get(constants.SERVERURL + '/admin/companies/list', {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
           this.companiesList = response.data;
-          
+
           this.companiesList.forEach((c, i) => {
             this.currentCompanies.values;
           });
@@ -227,6 +221,10 @@ export default class Menus extends Vue{
     });
   }
 
+  private reload(){
+    constants.reload();
+  }
+
 }
 </script>
 
@@ -241,8 +239,6 @@ export default class Menus extends Vue{
 
 #imgDelete{
   cursor: pointer; 
-  // width: 17px;
-  // height: 17px;
 }
 
 #imgEdit{
@@ -293,11 +289,7 @@ label{
 #dropdownMenuButton{
   display: block;
   width: 100%;
-  // color: #6c7985;
-  // background-color: rgb(190, 190, 190);
   background-clip: padding-box;
-  // border: 1px solid #ced4da;
-  // border-radius: 0.25rem;
   text-align: left;
 }
 
@@ -331,6 +323,16 @@ select{
 
 .form-control{
   color: black;
+}
+
+input[type=week]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+input[type=week]::-webkit-clear-button {
+  display: none; 
+  -webkit-appearance: none; 
 }
 
 </style>

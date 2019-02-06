@@ -74,10 +74,8 @@ export default class Login extends Vue{
         let data = {
           //username: this.username,
           //password: this.password
-          // username: 'admin',
-          // password: 'admin1'
           username: 'admin',
-          password: 'admin1'
+          password: 'admin'
         }
 
         axios.post( constants.SERVERURL + '/login', data, {
@@ -100,7 +98,7 @@ export default class Login extends Vue{
                   name: response.data.userRole.name
                 }
               }
-              debugger;
+
               constants.set_cookie("access_token", response.data.token);
               constants.set_cookie("user", JSON.stringify(this.user));
 
@@ -118,8 +116,6 @@ export default class Login extends Vue{
             console.log(error.response)
             this.$router.replace({ name: "login" });
         });
-
-    //} 
 
   }
 

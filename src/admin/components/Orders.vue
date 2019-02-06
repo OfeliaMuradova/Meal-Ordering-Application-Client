@@ -1,11 +1,16 @@
 <template>
   <div id="orders" class="container-fluid">
-
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <a class="nav-item nav-link active" id="nav-pending-tab" data-toggle="tab" href="#nav-pending" role="tab" aria-controls="nav-pending" aria-selected="true" @click="getPendingOrders()" >Pending</a>
         <a class="nav-item nav-link" id="nav-confirmed-tab" data-toggle="tab" href="#nav-confirmed" role="tab" aria-controls="nav-confirmed" aria-selected="false" @click="getConfirmedOrders()">Confirmed</a>
         <a class="nav-item nav-link" id="nav-cancelled-tab" data-toggle="tab" href="#nav-cancelled" role="tab" aria-controls="nav-cancelled" aria-selected="false" @click="getCancelledOrders()">Cancelled</a>
+      </div>
+      <div id="dropdownChooseWeek">
+        <select class="form-control">
+          <option selected>Current week</option>
+          <option>Next week</option>
+        </select>
       </div>
     </nav>
     <!-- Pending -->
@@ -23,8 +28,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="d-flex" v-for="(order, index) in updatedList" v-bind:key="index">
-              <!-- <tr class="d-flex" v-for="(order, index) in list" v-bind:key="index"> -->
+              <tr class="d-flex" v-for="(order, index) in updatedList" :key="order.id">
                 <th scope="row" class="col-1">{{ index + 1 }} </th>
                 <td class="col-2 scrollable">{{ order.order.user.name }}</td>
                 <td class="col-3 scrollable">{{ order.orderText }}</td>
@@ -55,15 +59,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="d-flex" v-for="(order, index) in updatedList" v-bind:key="index">
+                  <tr class="d-flex" v-for="(order, index) in updatedList" :key="order.id">
                     <th scope="row" class="col-1">{{ index + 1 }} </th>
                     <td class="col-2 scrollable">{{ order.order.user.name }}</td>
                     <td class="col-3 scrollable">{{ order.orderText }}</td>
                     <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
                     <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
                     <td class="col-1" align="right">  
-                      <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)">
-                      <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)">
+                      <img class="imgConfirm" src="@/assets/checked.png" style="cursor: default;" @click="confirmOrder(order, order.id)">
+                      <!-- <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)"> -->
                     </td>
                   </tr>
                 </tbody>
@@ -88,15 +92,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="d-flex" v-for="(order, index) in updatedList" v-bind:key="index">
+                  <tr class="d-flex" v-for="(order, index) in updatedList" :key="order.id">
                     <th scope="row" class="col-1">{{ index + 1 }} </th>
                     <td class="col-2 scrollable">{{ order.order.user.name }}</td>
                     <td class="col-3 scrollable">{{ order.orderText }}</td>
                     <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
                     <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
                     <td class="col-1" align="right">  
-                      <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)">
-                      <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)">
+                      <!-- <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)"> -->
+                      <img class="imgConfirm" src="@/assets/delete.png" style="cursor: default;">
                     </td>
                   </tr>
                 </tbody>
@@ -132,104 +136,91 @@ import { Order } from '@/types';
 
 @Component({})
 export default class Orders extends Vue{
-  @Prop() list: any;
+  // @Prop() list: any;
 
   private updatedList: Array<Order> = [];
   private orderStatusImage: string = '';
   private currentOrderID: number = null;
-  //private addedOrUpdatedOrder = {} as Order;
-  private currentOrder: Order = {
-    order_text: '',
-    confirmer: {
-      name: '',
-      username: '',
-      position: '',
-      password: '',
-      email: '',
-      phone_number: '',
-      userRole: {
-        id: -1,
-        name: ''
-      }
-    },
-    menu: {
-      path: '',
-      weekNum: null,
-      company: {
-        name: '',
-        webPageUrl: '',
-        menus: []
-      }
-    }
-  };
+  private currentOrder = {} as Order;
 
-  mounted(){
-    debugger;
-    this.updatedList = this.list;
-  }
-
-  private cancelOrder(order: Order, id: number){
-    // this.currentOrder = order;
-    // this.currentOrderID = id;
-
-    debugger;
-    // axios.delete(constants.SERVERURL + '/admin/orders/' + id, {
-    //     headers: constants.DEFAULT_HEADERS
-    //     }).then( (response: any) => {
-    //       debugger;
-    //       console.log(response);
-    //       location.reload();
-    //     })
-    //     .catch((error: any) => {
-    //       console.log(error.response)
-    // });
+  private cancelOrder(order: Order){
+    axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, {
+      headers: constants.DEFAULT_HEADERS,
+      params: {name: "Cancelled"},
+      }).then( (response: any) => {
+        debugger;
+        
+      })
+      .catch((error: any) => {
+        console.log(error.response)
+    });
 
   }
 
-  private confirmOrder(order: Order, id: number){
+  private confirmOrder(order: Order){
     debugger;
     console.log(order);
-    console.log(id);
-//#region  empty the object to clear the fields in the modal
 
-  //this.currentOrder = { } as Order;
-    this.currentOrder = {
-    order_text: '',
-    confirmer: {
-      name: '',
-      username: '',
-      position: '',
-      password: '',
-      email: '',
-      phone_number: '',
-      userRole: {
-        id: -1,
-        name: ''
-      }
-    },
-    menu: {
-      path: '',
-      weekNum: null,
-      company: {
-        name: '',
-        webPageUrl: '',
-        menus: []
-      }
-    }
-    }
-//#endregion
+    axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, {
+      headers: constants.DEFAULT_HEADERS,
+      params: {name: "Confirmed"},
+      }).then( (response: any) => {
+        debugger;
+        
+      })
+      .catch((error: any) => {
+        console.log(error.response)
+    });
+
+
+    // this.currentOrder = {
+    // order_text: '',
+    // confirmer: {
+    //   name: '',
+    //   username: '',
+    //   position: '',
+    //   password: '',
+    //   email: '',
+    //   phone_number: '',
+    //   userRole: {
+    //     id: -1,
+    //     name: ''
+    //   }
+    // },
+    // menu: {
+    //   path: '',
+    //   weekNum: null,
+    //   company: {
+    //     name: '',
+    //     webPageUrl: '',
+    //     menus: []
+    //   }
+    // }
+    // }
 
   }
 
-  private getPendingOrders(){
-    debugger;
+  mounted(){
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
             name: 'Pending'
           }
         }).then( (response: any) => {
-          debugger;
+          this.updatedList = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+  }
+
+  private getPendingOrders(){
+    axios.get(constants.SERVERURL + '/admin/orders/list', {
+        headers: constants.DEFAULT_HEADERS,
+        params: {
+            name: 'Pending'
+          }
+        }).then( (response: any) => {
           this.updatedList = response.data;
         })
         .catch((error: any) => {
@@ -337,6 +328,12 @@ tr:after {
   width: 100%;
   height: 100%;
   overflow: auto;
+}
+
+#dropdownChooseWeek{
+  position: absolute;
+    top: 35px;
+    right: 50px
 }
 
 </style>

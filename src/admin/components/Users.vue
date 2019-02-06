@@ -187,12 +187,9 @@ export default class Users extends Vue{
   }
 
   private deleteUser(id: number){
-    
-    axios.delete(constants.SERVERURL + '/admin/users/user/' + id, {
+    axios.delete(constants.SERVERURL + '/admin/users/' + id, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
-          debugger;
-          console.log(response);
           location.reload();
         })
         .catch((error: any) => {

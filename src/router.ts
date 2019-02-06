@@ -191,7 +191,6 @@ function checkAuth(){
       }
   });
 
-  //todo: validateToken
   if(token)
     loggedIn = true;
 }

@@ -6,13 +6,10 @@
           <h2>Place your order</h2>
 
           <div class="dropdown float-right">
-            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Select week
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <button class="dropdown-item" type="button">week num</button>
-              <button class="dropdown-item" type="button">week num</button>
-            </div>
+            <select class="form-control">
+              <option selected>Current week</option>
+              <option>Next week</option>
+            </select>
           </div>
         </div>
             <table class="table table-striped table-hover">

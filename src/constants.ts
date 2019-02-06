@@ -41,7 +41,6 @@ export function validatorEmpty(element: Element, label?: any){
 }
 
 export function validatorURL(element: Element, label: any){
-  //let URLregex = new RegExp('^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$');
   let URLregex = new RegExp('^(ftp|http|https):\/\/[^ "]+$');
   if( !URLregex.test((<HTMLInputElement>element).value) ){
     label.style.display = 'block';
@@ -76,4 +75,35 @@ export function getWeekNumber(from: any) {
     let pastDaysOfYear = (fromDate - firstDayOfYear) / 86400000;
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
+}
+
+export function getDateOfWeek(weekChosen: string) {
+  let w, y: number;
+  y = +weekChosen.substring(0, 4);
+  w = +weekChosen.slice(-2);
+  var simple = new Date(y, 0, 1 + (w - 1) * 7);
+  var dow = simple.getDay();
+  var ISOweekStart = simple;
+  if (dow <= 4)
+      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else
+      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  return ISOweekStart;
+}
+
+export function formatDate(date: Date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
+export function getFriday(date: Date) {
+  date.setDate(date.getDate() + 6);
+  return date;
 }

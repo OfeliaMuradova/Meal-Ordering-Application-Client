@@ -1,5 +1,5 @@
 {
-  "name": "vue-ts-test",
+  "name": "food-ordering-front",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,7 +16,8 @@
     "vue": "^2.5.17",
     "vue-axios": "^2.1.4",
     "vue-property-decorator": "^7.2.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuejs-datepicker": "^1.5.4"
   },
   "devDependencies": {
     "@types/jquery": "^3.3.22",

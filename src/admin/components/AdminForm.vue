@@ -57,6 +57,8 @@
                   <input type="text" class="form-control" ref="inputCompanyName" id="companyName" aria-describedby="help" placeholder="Enter name" v-model="addedOrUpdatedCompany.name">
                   <label class="error" ref="errorCompanyName">* This field is required</label>
                 </div>
+              </div>
+              <div class="col">
                 <div class="form-group">
                   <label for="webUrl">Website URL</label>
                   <input type="text" class="form-control" id="webUrl" ref="inputWebsite" placeholder="Enter URL" v-model="addedOrUpdatedCompany.webPageUrl">
@@ -64,17 +66,31 @@
                   <label class="error" ref="errorURL">Please, enter a valid URL</label>
                 </div>  
               </div>
-
-              <div class="col">
-                <label for="companyName">Menus</label>
-
-                
-              </div> <!-- col -->
-            </div> <!-- row -->
+            </div>
+            <div v-if="action == 'add'">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="companyName">Menu path</label>
+                    <input type="text" class="form-control" ref="inputMenupath" id="menupath" aria-describedby="help" placeholder="Enter path" v-model="addedOrUpdatedCompany.menus[0].path">
+                    <label class="error" ref="errorMenupath">* This field is required</label>
+                  </div>
+                    <label for="webUrl">Week dates</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <input type="week" class="form-control" id="weekPicker" min="2019-W01" required v-model="selectedWeek">
+                    <label class="error" ref="errorEmptyWebsite">* This field is required</label>
+                  </div>  
+                </div>
+              </div>
+            </div>
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="constants.reload()">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateCompany">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateCompany">Submit</button>
           </div>
@@ -119,7 +135,7 @@ import Orders from '@/admin/components/Orders.vue';
   components: {
     'users': Users,
     'menus': Menus,
-    'orders': Orders
+    'orders': Orders,
   },
 })
 export default class AdminForm extends Vue{
@@ -127,23 +143,24 @@ export default class AdminForm extends Vue{
   @Prop() list: any;
 
   private action: string = '';
-  private addedOrUpdatedCompanyID: number = -1;
-
-  private menus: Array<Menu> = [
-    { path: 'http://lkdlferferlfhliwehrfef',
-      weekNum: 30,
-      company: {
-        name: 'Merkel Menu',
-        webPageUrl: 'http://mrkel',
-        menus: []
-      } 
-     }
-  ];
-
+  private selectedWeek: string = '';
+  private addedOrUpdatedCompanyID: number = null;
   private addedOrUpdatedCompany: Company = {
+    id: null,
     name: '',
     webPageUrl: '',
-    menus: this.menus
+    menus:[
+      { path: '',
+        validFrom: '',
+        validTo: '',
+        company: {
+          id: null,
+          name: '',
+          webPageUrl: '',
+          menus: []
+        } 
+      }
+    ]
   };
 
   private addOrUpdateCompany(){
@@ -153,21 +170,29 @@ export default class AdminForm extends Vue{
         && constants.validatorURL(<Element>this.$refs.inputWebsite, <Element>this.$refs.errorURL)){
 
           if(this.action == 'add'){
-              axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
-                headers: constants.DEFAULT_HEADERS
-                }).then( (response: any) => {
-                  location.reload();
-                })
-                .catch((error: any) => {
-                  console.log(error.response)
-              });           
+            if(this.selectedWeek) {
+              this.addedOrUpdatedCompany.menus[0].validFrom = constants.formatDate(constants.getDateOfWeek(this.selectedWeek));
+              this.addedOrUpdatedCompany.menus[0].validTo = constants.formatDate(constants.getFriday(constants.getDateOfWeek(this.selectedWeek)));
+            }
+            axios.post(constants.SERVERURL + '/admin/companies/', this.addedOrUpdatedCompany, {
+              headers: constants.DEFAULT_HEADERS
+              }).then( (response: any) => {
+                location.reload();
+              })
+              .catch((error: any) => {
+                console.log(error.response)
+            });
           }
           else if(this.action == 'edit'){
-            axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, this.addedOrUpdatedCompany, {
+            let editedCompany = {
+              id: this.addedOrUpdatedCompany.id,
+              name: this.addedOrUpdatedCompany.name,
+              webPageUrl: this.addedOrUpdatedCompany.webPageUrl,
+            }
+            axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, editedCompany, {
                 headers: constants.DEFAULT_HEADERS
                 }).then( (response: any) => {
-                    console.log('edited');
-
+                    debugger;
                     location.reload();
                 })
                 .catch((error: any) => {
@@ -176,7 +201,6 @@ export default class AdminForm extends Vue{
           }
           else 
             alert('Something went wrong!');
-          
       }
     }
   }
@@ -199,14 +223,27 @@ export default class AdminForm extends Vue{
     this.addedOrUpdatedCompany = {
       name: '',
       webPageUrl: '',
-      menus: this.menus
-    };
+      menus: [{ path: '',
+              validFrom: '',
+              validTo: '',
+              company: {
+                name: '',
+                webPageUrl: '',
+                menus: []
+              } 
+            }]
+    }
   }
 
   private prepareEdit(company: Company, id: number){
+    debugger;
     this.action = 'edit';
     this.addedOrUpdatedCompany = company;
     this.addedOrUpdatedCompanyID = id;
+  }
+
+  private reload(){
+    constants.reload();
   }
 
 }
@@ -226,8 +263,6 @@ h4{
 
 #imgDelete{
   cursor: pointer; 
-  // width: 17px;
-  // height: 17px;
 }
 
 #imgEdit{
@@ -272,5 +307,14 @@ th, td{
   overflow: auto;
 }
 
+input[type=week]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+input[type=week]::-webkit-clear-button {
+  display: none; 
+  -webkit-appearance: none; 
+}
 
 </style>

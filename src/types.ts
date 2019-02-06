@@ -18,23 +18,31 @@ export interface User{
 }
 
 export interface Order{
-  order_text: string,
+  id?: number,
+  orderText: string,
   menu: Menu
-  confirmer: User
-  //updated_at: Date
-  //confirmed_at: Date
+  confirmer: User,
+  weekDay: WeekDay
+}
+
+export interface WeekDay{
+  id: number,
+  day: string,
+  englishName: string
 }
 
 export interface Menu{
   path: string,
-  weekNum: number,
+  validFrom: string,
+  validTo: string,
   company: Company
 }
 
 export interface Company{
-  name: string,
-  webPageUrl: string  
-  menus: Array<Menu>
+  id?: number,
+  name?: string,
+  webPageUrl?: string  
+  menus?: Array<Menu>
 }
 
 export interface UserRole{
