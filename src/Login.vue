@@ -62,7 +62,7 @@ export default class Login extends Vue{
         let data = {
           //username: this.username,
           //password: this.password
-          username: 'admin',
+          username: 'user',
           password: 'admin'
         }
 

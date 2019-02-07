@@ -72,7 +72,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Prop, Watch } from 'vue-property-decorator'
 import { Menu, Order } from '@/types.ts'
 
 @Component({})
@@ -87,6 +87,11 @@ export default class UserOrder extends Vue{
       return 'current';
     if(this.chosenWeek === "Next week")
       return 'next';
+  }
+
+  @Watch('week')
+  onChildChanged(val: string, oldVal: string) {
+    
   }
 
   private placeOrder(){

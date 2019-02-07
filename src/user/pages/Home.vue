@@ -67,13 +67,27 @@ export default class Home extends Vue{
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(route: any) {
 		if (route.name === 'order') { 
-			//orderebis wamogeba weekis mixedvit(current)
-			
-			// axios.get(constants.SERVERURL + '/admin/orders/list', {
-      //   headers: constants.DEFAULT_HEADERS
+			axios.get(constants.SERVERURL + '/orders/orderMenus', {
+				headers: constants.DEFAULT_HEADERS,
+				params: {
+					week: "current"
+				}
+        }).then( (response: any) => {
+					this.menusList = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+			});
+			//todo: get orders
+
+			// axios.get(constants.SERVERURL + '/orders/orderMenus', {
+			// 	headers: constants.DEFAULT_HEADERS,
+			// 	params: {
+			// 		week: "current"
+			// 	}
       //   }).then( (response: any) => {
+			// 		debugger;
 			// 		this.ordersList = response.data;
-			// 		this.menusList = response.data;
       //   })
       //   .catch((error: any) => {
       //     console.log(error.response)

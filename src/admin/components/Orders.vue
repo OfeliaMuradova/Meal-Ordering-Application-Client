@@ -164,15 +164,14 @@ import { Order } from '@/types';
 
 @Component({})
 export default class Orders extends Vue{
-  //@Prop() list: any;
   private chosenWeek: string = 'Current week';
   private updatedList: Array<Order> = [];
   private orderStatusImage: string = '';
   private currentOrderID: number = null;
   private currentOrder = {} as Order;
+  private currentTab: string = 'Pending';
   private orderSummaryList: { name: string, qty: number }[] = [];
 
-  //todo: send this week to the service to get corresponding orders 
   get week(){
     if(this.chosenWeek === "Current week")
       return 'current';
@@ -180,10 +179,28 @@ export default class Orders extends Vue{
       return 'next';
   }
 
-  private cancelOrder(order: Order){
+  @Watch('week')
+  onChildChanged(val: string, oldVal: string) {
+    debugger;
+    axios.get(constants.SERVERURL + '/admin/orders/list', {
+        headers: constants.DEFAULT_HEADERS,
+        params: {
+            name: this.currentTab,
+            week: this.week
+          }
+        }).then( (response: any) => {
+          debugger;
+          this.updatedList = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+   }
+
+  private cancelOrder(order: Order){   
     axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, {
       headers: constants.DEFAULT_HEADERS,
-      params: {name: "Cancelled"},
+      params: { name: "Cancelled" },
       }).then( (response: any) => {
         debugger;
         
@@ -209,39 +226,16 @@ export default class Orders extends Vue{
         console.log(error.response)
     });
 
-
-    // this.currentOrder = {
-    // order_text: '',
-    // confirmer: {
-    //   name: '',
-    //   username: '',
-    //   position: '',
-    //   password: '',
-    //   email: '',
-    //   phone_number: '',
-    //   userRole: {
-    //     id: -1,
-    //     name: ''
-    //   }
-    // },
-    // menu: {
-    //   path: '',
-    //   weekNum: null,
-    //   company: {
-    //     name: '',
-    //     webPageUrl: '',
-    //     menus: []
-    //   }
-    // }
-    // }
-
   }
 
   mounted(){
+    this.currentTab = "Pending";
+
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
-            name: 'Pending'
+            name: 'Pending',
+            week: this.week
           }
         }).then( (response: any) => {
           this.updatedList = response.data;
@@ -252,10 +246,13 @@ export default class Orders extends Vue{
   }
 
   private getPendingOrders(){
+    this.currentTab = "Pending";
+
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
-            name: 'Pending'
+            name: 'Pending',
+            week: this.week
           }
         }).then( (response: any) => {
           this.updatedList = response.data;
@@ -266,10 +263,13 @@ export default class Orders extends Vue{
   }
 
   private getCancelledOrders(){
+    this.currentTab = "Cancelled";    
+
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
-            name: 'Cancelled'
+            name: 'Cancelled',
+            week: this.week
           }
         }).then( (response: any) => {
           this.updatedList = response.data;
@@ -280,10 +280,13 @@ export default class Orders extends Vue{
   }
 
   private getConfirmedOrders(){
+    this.currentTab = "Confirmed";    
+
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
-            name: 'Confirmed'
+            name: 'Confirmed',
+            week: this.week
           }
         }).then( (response: any) => {
           this.updatedList = response.data;
