@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from '@/Login.vue'
 
 import Home from '@/user/pages/Home.vue'
-import Order from '@/user/pages/Order.vue'
+import UserOrder from '@/user/pages/Order.vue'
 import Menus from '@/user/pages/Menus.vue'
 import Profile from '@/user/components/Profile.vue'
 import Slider from '@/user/components/Slider.vue'
@@ -53,7 +53,7 @@ let router = new Router({
           {
             path: '/order',
             name: 'order',
-            component: Order,
+            component: UserOrder,
             meta: { 
               requiresAuth: true,
               admin: false
@@ -148,7 +148,7 @@ let router = new Router({
           {
             path: '/order',
             name: 'adminOrder',
-            component: Order,
+            component: UserOrder,
             meta: { 
               requiresAuth: true,
               admin: true

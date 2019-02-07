@@ -116,37 +116,37 @@ export default class Menus extends Vue{
     if(constants.validatorEmpty(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorEmptyPath)
         && constants.validatorURL(<Element>this.$refs.inputMenuImagePath, <Element>this.$refs.errorWrongURL)){
 
-        if(!this.companyId){
-          (<any>this.$refs.errorEmptyCompany).style.display = 'block';
-        }
-        else if(this.action == 'add'){
-          if(this.selectedWeek) {
-              this.addedOrUpdatedMenu.validFrom = constants.formatDate(constants.getDateOfWeek(this.selectedWeek));
-              this.addedOrUpdatedMenu.validTo = constants.formatDate(constants.getFriday(constants.getDateOfWeek(this.selectedWeek)));
-            }
-              this.addedOrUpdatedMenu.company = {
-                id: this.companyId
-              };
+        this.addedOrUpdatedMenu.company.id = this.companyId;
 
-              axios.post(constants.SERVERURL + '/admin/menus/', this.addedOrUpdatedMenu, {
-                headers: constants.DEFAULT_HEADERS
-                }).then( (response: any) => {
-                  location.reload();
-                })
-                .catch((error: any) => {
-                  console.log(error.response)
-              }); 
+        if(this.selectedWeek) {
+          this.addedOrUpdatedMenu.validFrom = constants.formatDate(constants.getDateOfWeek(this.selectedWeek));
+          this.addedOrUpdatedMenu.validTo = constants.formatDate(constants.getFriday(constants.getDateOfWeek(this.selectedWeek)));
+        }
+
+        if(this.action == 'add'){
+          if(!this.companyId){
+            (<any>this.$refs.errorEmptyCompany).style.display = 'block';
           }
-          else if(this.action == 'edit'){
-            debugger;
-            axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
-                headers: constants.DEFAULT_HEADERS
-                }).then( (response: any) => {
-                  location.reload();
-                })
-                .catch((error: any) => {
-                  console.log(error.response)
-              });
+          else{          
+            axios.post(constants.SERVERURL + '/admin/menus/', this.addedOrUpdatedMenu, {
+              headers: constants.DEFAULT_HEADERS
+              }).then( (response: any) => {
+                location.reload();
+              })
+              .catch((error: any) => {
+                console.log(error.response)
+            });
+          } 
+        }
+        else if(this.action == 'edit'){
+          axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
+              headers: constants.DEFAULT_HEADERS
+              }).then( (response: any) => {
+                location.reload();
+              })
+              .catch((error: any) => {
+                console.log(error.response)
+            });
           }
           else 
             alert('Something went wrong!');
@@ -155,7 +155,6 @@ export default class Menus extends Vue{
   }
 
   private deleteMenu(id: number){
-    debugger;
     axios.delete(constants.SERVERURL + '/admin/menus/' + id, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
@@ -183,15 +182,14 @@ export default class Menus extends Vue{
       }
     };
     // list the companies
-    debugger;
     axios.get(constants.SERVERURL + '/admin/companies/list', {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
           this.companiesList = response.data;
 
-          this.companiesList.forEach((c, i) => {
-            this.currentCompanies.values;
-          });
+          // this.companiesList.forEach((c, i) => {
+          //   this.currentCompanies.values;
+          // });
 
         })
         .catch((error: any) => {
@@ -201,9 +199,16 @@ export default class Menus extends Vue{
   }
 
   private prepareEdit(menu: Menu, id: number){
-    debugger;
     this.action = 'edit';
-    this.addedOrUpdatedMenu = menu;
+    
+    this.addedOrUpdatedMenu = {
+      path: menu.path,
+      validFrom: menu.validFrom,
+      validTo: menu.validTo,
+      company: {
+        id: menu.company.id
+      }
+    }
     this.addedOrUpdatedMenuID = id;
 
     axios.get(constants.SERVERURL + '/admin/companies/list', {
@@ -211,9 +216,9 @@ export default class Menus extends Vue{
         }).then( (response: any) => {
           this.companiesList = response.data;
 
-          this.companiesList.forEach((c, i) => {
-            this.currentCompanies.values
-          });
+          // this.companiesList.forEach((c, i) => {
+          //   this.currentCompanies.values()
+          // });
 
         })
         .catch((error: any) => {

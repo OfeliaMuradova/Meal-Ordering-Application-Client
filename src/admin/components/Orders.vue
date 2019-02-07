@@ -1,5 +1,8 @@
 <template>
   <div id="orders" class="container-fluid">
+    <div class="form-group" id="pageTitle">
+      <h4>Current orders</h4>
+    </div>
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <a class="nav-item nav-link active" id="nav-pending-tab" data-toggle="tab" href="#nav-pending" role="tab" aria-controls="nav-pending" aria-selected="true" @click="getPendingOrders()" >Pending</a>
@@ -7,8 +10,8 @@
         <a class="nav-item nav-link" id="nav-cancelled-tab" data-toggle="tab" href="#nav-cancelled" role="tab" aria-controls="nav-cancelled" aria-selected="false" @click="getCancelledOrders()">Cancelled</a>
       </div>
       <div id="dropdownChooseWeek">
-        <select class="form-control">
-          <option selected>Current week</option>
+        <select v-model="chosenWeek" class="form-control">
+          <option selected >Current week</option>
           <option>Next week</option>
         </select>
       </div>
@@ -18,13 +21,14 @@
       <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
         <div class="scroll">
           <table id="orderTable" class="table table-hover table-striped">
-            <thead>
+            <thead class="thead-light">
               <tr class="d-flex">
                 <th scope="col" class="col-1"></th>
                 <th scope="col" class="col-2">Customer</th>
                 <th scope="col" class="col-3">Order text</th>
                 <th scope="col" class="col-3">Menu</th>
                 <th scope="col" class="col-2">Week day</th>
+                <th scope="col" class="col-1"></th>
               </tr>
             </thead>
             <tbody>
@@ -49,13 +53,14 @@
           <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
             <div class="scroll">
               <table id="orderTable" class="table table-hover table-striped">
-                <thead>
+                <thead class="thead-light">
                   <tr class="d-flex">
                     <th scope="col" class="col-1"></th>
                     <th scope="col" class="col-2">Customer</th>
                     <th scope="col" class="col-3">Order text</th>
                     <th scope="col" class="col-3">Menu</th>
                     <th scope="col" class="col-2">Week day</th>
+                    <th scope="col" class="col-1"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -67,12 +72,35 @@
                     <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
                     <td class="col-1" align="right">  
                       <img class="imgConfirm" src="@/assets/checked.png" style="cursor: default;" @click="confirmOrder(order, order.id)">
-                      <!-- <img class="imgDelete" src="@/assets/delete.png" v-b-tooltip.hover title="Cancel order" @click="cancelOrder(order, order.id)"> -->
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
+
+            <!-- Order Summary -->
+            <h4>Order Summary</h4>
+            <div id="orderSummary" class="container-fluid">
+              <div class="scroll">
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr class="d-flex">
+                      <th scope="col" class="col-1"></th>
+                      <th scope="col" class="col-5">Meal type</th>
+                      <th scope="col" class="col-6">Ordered quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="d-flex" v-for="(qty, name, index) in orderSummaryList" :key="index">
+                    <th scope="row" class="col-1">{{ index + 1 }} </th>
+                    <td class="col-5">{{ name }}</td>
+                    <td class="col-6">{{ qty }}</td>
+                  </tr>
+                </tbody>
+                </table>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -82,13 +110,14 @@
           <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
             <div class="scroll">
               <table id="orderTable" class="table table-hover table-striped">
-                <thead>
+                <thead class="thead-light">
                   <tr class="d-flex">
                     <th scope="col" class="col-1"></th>
                     <th scope="col" class="col-2">Customer</th>
                     <th scope="col" class="col-3">Order text</th>
                     <th scope="col" class="col-3">Menu</th>
                     <th scope="col" class="col-2">Week day</th>
+                    <th scope="col" class="col-1"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,7 +128,6 @@
                     <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
                     <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
                     <td class="col-1" align="right">  
-                      <!-- <img class="imgConfirm" src="@/assets/unchecked.png" v-b-tooltip.hover title="Confirm order" @click="confirmOrder(order, order.id)"> -->
                       <img class="imgConfirm" src="@/assets/delete.png" style="cursor: default;">
                     </td>
                   </tr>
@@ -129,19 +157,28 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Prop } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 import * as constants from '@/constants.ts';
 import axios from 'axios';
 import { Order } from '@/types';
 
 @Component({})
 export default class Orders extends Vue{
-  // @Prop() list: any;
-
+  //@Prop() list: any;
+  private chosenWeek: string = 'Current week';
   private updatedList: Array<Order> = [];
   private orderStatusImage: string = '';
   private currentOrderID: number = null;
   private currentOrder = {} as Order;
+  private orderSummaryList: { name: string, qty: number }[] = [];
+
+  //todo: send this week to the service to get corresponding orders 
+  get week(){
+    if(this.chosenWeek === "Current week")
+      return 'current';
+    if(this.chosenWeek === "Next week")
+      return 'next';
+  }
 
   private cancelOrder(order: Order){
     axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, {
@@ -254,6 +291,20 @@ export default class Orders extends Vue{
         .catch((error: any) => {
           console.log(error.response)
       });
+
+      this.getOrderSummary();
+  }
+
+  private getOrderSummary(){
+    axios.get(constants.SERVERURL + '/admin/orders/getOrdersSum', {
+        headers: constants.DEFAULT_HEADERS,
+        params: { week: this.week },
+        }).then( (response: any) => {
+          this.orderSummaryList = response.data;
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
   }
 
 }
@@ -261,6 +312,10 @@ export default class Orders extends Vue{
 
 
 <style scoped lang="scss">
+h4{
+  color: #606060;
+}
+
 .error{
   display: none;
   color: red;
@@ -333,8 +388,19 @@ tr:after {
 #dropdownChooseWeek{
   position: absolute;
     top: 35px;
-    right: 50px
+    right: 30px
 }
+
+#orderSummary{
+  padding: 0;
+
+  .scroll{
+    height : 300px;
+    overflow-y : scroll;
+    margin-bottom: 30px;
+  }
+}
+
 
 </style>
 

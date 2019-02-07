@@ -1,31 +1,22 @@
 <template>
   <div class="login">
-
     <div class="container">
       <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
             <div class="card-body">
               <h5 class="card-title text-center">Welcome</h5>
-
               <form class="form-signin" method="post" action="login" >
                 <div class="form-label-group">
                   <label for="inputUsername">Username</label>
                   <input type="text" id="inputUsername" ref="inputUsername" class="form-control" :data-state="usernameState" autofocus>  <!--v-model="username"-->
                   <label id="errorUsername" ref="errorUsername">Please enter a username!</label>
                 </div>
-
                 <div class="form-label-group">
                    <label for="inputPassword">Password</label>
                    <input type="password" id="inputPassword" ref="inputPassword" class="form-control" :data-state="passwordState" > <!--v-model="password"-->
                    <label id="errorPassword" ref="errorPassword">Please enter a password!</label>
                 </div>
-<!--
-                <div class="custom-control custom-checkbox mb-3">
-                  <input type="checkbox" class="custom-control-input" id="customCheck1">
-                  <label class="custom-control-label" for="customCheck1">Remember me</label>
-                </div>
--->
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login" type="button">Sign in</button>
               </form>
             </div>
@@ -33,11 +24,8 @@
         </div>
       </div>
     </div>
-
   </div>
-
 </template>
-
 
 <script lang="ts">
 import Vue from 'vue'
@@ -189,4 +177,3 @@ export default class Login extends Vue{
   }
 
 </style>
-

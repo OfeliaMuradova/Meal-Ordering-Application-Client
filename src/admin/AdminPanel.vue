@@ -82,6 +82,7 @@ export default class AdminPanel extends Vue{
     if (this.$route.name === 'adminMenus') { return 'menus' }
     if (this.$route.name === 'companies') { return 'companies'}
     if (this.$route.name === 'users') { return 'users'}
+    if (this.$route.name === 'adminOrders') { return 'orders'}
   }
 
   @Watch('$route', { immediate: true, deep: true })
@@ -107,20 +108,6 @@ export default class AdminPanel extends Vue{
           console.log(error.response)
       });
     }
-
-    // if (route.name === 'adminOrders') { 
-    //   axios.get(constants.SERVERURL + '/admin/orders/list', {
-    //     headers: constants.DEFAULT_HEADERS,
-    //     params: {
-    //         name: 'Pending'
-    //       }
-    //     }).then( (response: any) => {
-    //       this.list = response.data;
-    //     })
-    //     .catch((error: any) => {
-    //       console.log(error.response)
-    //   });
-    // }
 
     if (route.name === 'users') { 
       axios.get(constants.SERVERURL + '/admin/users/list', {

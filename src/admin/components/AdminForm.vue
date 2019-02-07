@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
-     <div class="form-group" id="form">
-        <h4>Current {{ componentName }}</h4>
-     </div>
+  <div class="container-fluid">
+    <div class="form-group" id="form">
+      <h4>Current {{ componentName }}</h4>
+    </div>
 
     <div class="clearfix"></div>
 

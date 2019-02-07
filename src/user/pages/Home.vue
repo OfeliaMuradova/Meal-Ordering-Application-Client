@@ -14,10 +14,7 @@
 						<router-link :to="{ name: 'slider'}" tag="li" active-class="nav-item active">
 							<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 						</router-link>
-						<!-- <router-link :to="{ name: 'menus'}" tag="li" active-class="nav-item">
-							<a class="nav-link" href="#">Menus</a>
-						</router-link> -->
-						<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
+						<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item" :menusList = menusList :ordersList = ordersList>
 							<a class="nav-link" href="#">Order</a>
 						</router-link>
 						<router-link :to="{ name: 'contact', params: { page: 'contact' }}" tag="li" active-class="nav-item">
@@ -26,7 +23,7 @@
 					</ul>
 
 					<ul class="navbar-nav ml-auto" id="bootstrap-overrides-right">
-							<router-link :to="{ name: 'order'}" tag="li" active-class="nav-item">
+							<router-link v-if="isAdmin" :to="{ name: 'order'}" tag="li" active-class="nav-item">
 								<a class="nav-link" href="#">Order
 								<img class="icon" src="@/assets/order.png">
 								</a>
@@ -56,11 +53,42 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios'
-import { Prop } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 import * as constants from '@/constants.ts'
+import { Menu, Order, OrderDetails, OrderStatus } from '@/types.ts'
 
 @Component({})
 export default class Home extends Vue{
+	private isAdmin: boolean = false;
+	private ordersList: Array<Order> = [];
+	private week: string = '';
+	private menusList: Array<Menu> = [];
+
+  @Watch('$route', { immediate: true, deep: true })
+  onUrlChange(route: any) {
+		if (route.name === 'order') { 
+			//orderebis wamogeba weekis mixedvit(current)
+			
+			// axios.get(constants.SERVERURL + '/admin/orders/list', {
+      //   headers: constants.DEFAULT_HEADERS
+      //   }).then( (response: any) => {
+			// 		this.ordersList = response.data;
+			// 		this.menusList = response.data;
+      //   })
+      //   .catch((error: any) => {
+      //     console.log(error.response)
+			// });
+
+		}
+		else if(route.name === 'slider'){
+			let currentUser = constants.getObjectCookie("user");
+			if(currentUser.userRole.name == "USER")
+				this.isAdmin = false;
+			else if(currentUser.userRole.name == "ADMIN")
+				this.isAdmin = true;
+		}
+
+	}
 
 	private logout() {
 		try{

@@ -27,8 +27,6 @@
       </a>
     </div>
 
-    <button type="button" v-on:click="callTest()">CLICK HERE</button>
-
   </div>
 </template>
 
@@ -42,21 +40,6 @@ import * as constants from '@/constants.ts';
 @Component({})
 export default class Slider extends Vue{
   
-  private callTest(){
-    debugger;
-    //axios.defaults.headers.common['Authorization'] = 'Bearer ';
-    //console.log(axios.defaults.headers);
-    axios.get(constants.SERVERURL + '/orders/list', {
-       headers: constants.DEFAULT_HEADERS
-      }).then( (response: any) => {
-          console.log("request sent successfully");
-      })
-      .catch((error: any) => {
-        console.log(error.response)
-    });
-
-  }
-
 }
 </script>
 

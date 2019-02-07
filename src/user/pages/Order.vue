@@ -6,14 +6,14 @@
           <h2>Place your order</h2>
 
           <div class="dropdown float-right">
-            <select class="form-control">
-              <option selected>Current week</option>
+            <select v-model="chosenWeek" class="form-control">
+              <option selected >Current week</option>
               <option>Next week</option>
             </select>
           </div>
         </div>
             <table class="table table-striped table-hover">
-              <caption>This caption explains how to input data 
+              <caption>Enter the numbers (e.g. E1, E3 etc.) into the input fields 
                 <button type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
               </caption>
 
@@ -72,11 +72,22 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
+import { Menu, Order } from '@/types.ts'
 
 @Component({})
-export default class Order extends Vue{
+export default class UserOrder extends Vue{
+  @Prop() menusList: Array<Menu>;
+  @Prop() ordersList: Array<Menu>;
+  private chosenWeek: string = "Current week";
+  private order: Order = {} as Order;
 
-
+  get week(){
+    if(this.chosenWeek === "Current week")
+      return 'current';
+    if(this.chosenWeek === "Next week")
+      return 'next';
+  }
 
   private placeOrder(){
 
@@ -108,5 +119,3 @@ h2{
 }
 
 </style>
-
-
