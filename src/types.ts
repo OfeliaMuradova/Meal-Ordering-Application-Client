@@ -25,6 +25,7 @@ export interface OrderDetails{
   updatedAt?: Date,
   validFrom?: Date,
   validTo?: Date,
+  orderText?: string,
   menu?: Menu,
   orderStatus?: OrderStatus,
   confirmer?: User,

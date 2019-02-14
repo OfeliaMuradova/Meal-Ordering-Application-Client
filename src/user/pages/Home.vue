@@ -66,35 +66,7 @@ export default class Home extends Vue{
 
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(route: any) {
-		if (route.name === 'order') { 
-			axios.get(constants.SERVERURL + '/orders/orderMenus', {
-				headers: constants.DEFAULT_HEADERS,
-				params: {
-					week: "current"
-				}
-        }).then( (response: any) => {
-					this.menusList = response.data;
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-			});
-			//todo: get orders
-
-			// axios.get(constants.SERVERURL + '/orders/orderMenus', {
-			// 	headers: constants.DEFAULT_HEADERS,
-			// 	params: {
-			// 		week: "current"
-			// 	}
-      //   }).then( (response: any) => {
-			// 		debugger;
-			// 		this.ordersList = response.data;
-      //   })
-      //   .catch((error: any) => {
-      //     console.log(error.response)
-			// });
-
-		}
-		else if(route.name === 'slider'){
+		if(route.name === 'slider'){
 			let currentUser = constants.getObjectCookie("user");
 			if(currentUser.userRole.name == "USER")
 				this.isAdmin = false;
