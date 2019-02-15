@@ -13,8 +13,8 @@ export interface Order{
   id?: number,
   createdAt?: Date,
   updatedAt?: Date,
-  validFrom?: Date,
-  validTo?: Date,
+  validFrom?: string,
+  validTo?: string,
   user?: User,
   orderDetails?: Array<OrderDetails>
 }
@@ -23,13 +23,12 @@ export interface OrderDetails{
   id?: number,
   createdAt?: Date,
   updatedAt?: Date,
-  validFrom?: Date,
-  validTo?: Date,
   orderText?: string,
   menu?: Menu,
   orderStatus?: OrderStatus,
   confirmer?: User,
-  weekDay?: WeekDay
+  weekDay?: WeekDay,
+  order?: Order
 }
 
 export interface OrderStatus{
@@ -39,9 +38,9 @@ export interface OrderStatus{
 }
 
 export interface WeekDay{
-  id: number,
-  day: string,
-  englishName: string
+  id?: number,
+  day?: string,
+  englishName?: string
 }
 
 export interface Menu{

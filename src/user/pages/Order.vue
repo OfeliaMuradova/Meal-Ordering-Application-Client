@@ -21,49 +21,28 @@
                 <tr>
                   <th scope="col"> </th>
                   <th scope="col">Order meals</th>
-                  <th scope="col">Menu</th>
+                  <!-- <th scope="col">Menu</th> -->
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">Montag</th>
-                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals" v-model="f"></td>
-                  <td>
-                    <a href="" target="_blank"> Menu </a>  
-                  </td>
+                <tr v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
+                  <th scope="row">{{ orderDetail.weekDay.day }}</th>
+                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals" v-model="orderDetail.orderText"></td>
+                  <!-- <td>
+                    <a :href="currentMenu" target="_blank"> Menu </a>  
+                  </td> -->
                 </tr>
-                <tr>
-                  <th scope="row">Dienstag</th>
-                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>
-                    <a href="" target="_blank"> Menu </a>  
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Mittwoch</th>
-                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>
-                    <a href="" target="_blank"> Menu </a>  
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Donnerstag</th>
-                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>
-                    <a href="" target="_blank"> Menu </a>  
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Freitag</th>
-                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals"></td>
-                  <td>
-                    <a href="" target="_blank"> Menu </a>  
-                  </td>
-                </tr>
+
               </tbody>
             </table>
 
       </div>  
+
+      <div id="menuImageContainer" class="container-fluid">
+
+
+      </div>
+
     </div>
   </div>
 </template>
@@ -73,16 +52,33 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
-import { Menu, Order, OrderDetails } from '@/types.ts'
+import { Menu, Order, OrderDetails, WeekDay } from '@/types.ts'
 import axios from 'axios'
 import * as constants from '@/constants.ts'
 
 @Component({})
 export default class UserOrder extends Vue{
   private menusList: Array<Menu> = [];
-  private ordersList: Array<object> = [];
   private chosenWeek: string = "Current week";
+  private currentMenu: Menu = {};
   private orders: any = null;
+  private currentOrders = {
+    Monday: '',
+    Tuesday: '',
+    Wednesday: '',
+    Thursday: '',
+    Friday: '',
+  };
+  private action: string = '';
+  private weeklyOrder: Order = {
+    orderDetails: [
+      { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Monday', englishName: 'Monday' } },
+      { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Tuesday', englishName: 'Tuesday' } },
+      { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Wednesday', englishName: 'Wednesday' } },
+      { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Thursday', englishName: 'Thursday' } },
+      { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Friday', englishName: 'Friday' } }
+    ]
+  };
 
   get week(){
     if(this.chosenWeek === "Current week")
@@ -93,62 +89,135 @@ export default class UserOrder extends Vue{
 
   @Watch('week')
   onChildChanged(val: string, oldVal: string) {
-    //send request to get orders for changed week
+    axios.get(constants.SERVERURL + '/orders/orderMenus', {
+      headers: constants.DEFAULT_HEADERS,
+      params: {
+        week: val
+      }
+      }).then( (response: any) => {
+        this.currentMenu = response.data[0];
+      })
+      .catch((error: any) => {
+        console.log(error.response)
+    });
+
+    // axios.get(constants.SERVERURL + '/orders/edit', {
+    //   headers: constants.DEFAULT_HEADERS,
+    //   params: {
+    //     week: val
+    //   }
+    //   }).then( (response: any) => {
+    //     if(response.data){
+    //       var ordersList = response.data.orderDetails.map((orderDetail: OrderDetails) => ( {weekDay: orderDetail.weekDay.day, orderText: orderDetail.orderText}) );
+
+    //       ordersList.forEach((order: any)=>{
+    //         (<any>this.currentOrders)[order.weekDay] = order.orderText;
+    //       });
+    //     }else{
+    //       ordersList = [];
+    //       this.currentOrders = {
+    //         Monday: '',
+    //         Tuesday: '',
+    //         Wednesday: '',
+    //         Thursday: '',
+    //         Friday: '',
+    //       }
+    //     }
+
+    //   })
+    //   .catch((error: any) => {
+    //     console.log(error.response)
+    // });
+
   }
 
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(route: any) {
 		if (route.name === 'order') { 
+      //get an order for current week
+      axios.get(constants.SERVERURL + '/orders/edit', {
+        headers: constants.DEFAULT_HEADERS,
+        params: { week: "current" }
+      }).then( (response: any) => {
+        if(response.data){
+          this.action = 'edit';
+
+          this.weeklyOrder.orderDetails.forEach((orderDetail, index, ordersArray) => {
+            response.data.orderDetails.forEach((o: any) => {
+              if(orderDetail.weekDay.day === o.weekDay.day){
+                ordersArray[index] = o;
+              }
+            });
+          });
+
+          console.log(this.weeklyOrder.orderDetails)
+
+        }else{
+          this.action = 'add';
+        }
+      })
+      .catch((error: any) => {
+        console.log(error.response)
+    });
+
 			axios.get(constants.SERVERURL + '/orders/orderMenus', {
 				headers: constants.DEFAULT_HEADERS,
 				params: {
 					week: "current"
 				}
         }).then( (response: any) => {
-					this.menusList = response.data;
+          this.currentMenu = response.data[0];
         })
         .catch((error: any) => {
           console.log(error.response)
 			});
 			
-			axios.get(constants.SERVERURL + '/orders/edit', {
-				headers: constants.DEFAULT_HEADERS,
-				params: {
-					week: "current"
-				}
-        }).then( (response: any) => {
-          this.ordersList = response.data.orderDetails.map((orderDetail: OrderDetails) => ( {weekDay: orderDetail.weekDay.day, orderText: orderDetail.orderText}) );
-
-          // var order = { Monday: 2, Tuesday: 3, Wednesday: 4, Thursday: 5, Friday: 6, Saturday: 7, Sunday: 8 };
-
-          // this.ordersList.sort(function (a: any, b: any) {
-          //     return (<any>order)[a.weekDay] - (<any>order)[b.weekDay];
-          // });
-
-          // // console.log(this.ordersList)
-          // console.log(this.ordersList)
-
-          this.getOrderByWeekday("Monday");
-
-        })
-        .catch((error: any) => {
-          console.log(error.response)
-			});
-
     }
   }
 
   private placeOrder(){
-
-  }
-
-  private getOrderByWeekday(day: string){
     debugger;
-    let found = this.ordersList.find((element: any) => {
-      return element.weekDay == day;
-    });
-    return (<any>found).orderText;
+    if(this.action == 'add'){
+      this.weeklyOrder = {
+        validFrom: this.currentMenu.validFrom,
+        validTo: this.currentMenu.validTo,
+        user: constants.getObjectCookie("user")
+      }
+      
+      axios.get(constants.SERVERURL + '/orders/weekDays', {
+        headers: constants.DEFAULT_HEADERS,
+        }).then( (response: any) => {
+          var weekDays: Array<WeekDay> = response.data;
+
+          this.weeklyOrder.orderDetails.forEach((order, index)=>{
+            weekDays.forEach((weekDay, index)=>{
+              if(order.weekDay.day === weekDay.day)
+                order.weekDay.id = weekDay.id;
+            });
+          });
+
+        })
+        .catch((error: any) => {
+          console.log(error.response)
+      });
+
+      console.log(this.weeklyOrder);
+    
+    }
+    else if(this.action == 'edit'){
+      debugger;
+
+    }
+
+
   }
+
+  // private getOrderByWeekday(day: string){
+  //   let found = this.ordersList.find((element: any) => {
+  //     return element.weekDay == day;
+  //   });
+  //   return (<any>found).orderText;
+  // }
 
 }
 </script>
