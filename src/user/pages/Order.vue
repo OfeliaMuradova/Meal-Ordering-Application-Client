@@ -21,27 +21,22 @@
             <tr>
               <th scope="col"> </th>
               <th scope="col">Order meals</th>
-              <!-- <th scope="col">Menu</th> -->
+              <th scope="col">Menu</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
               <th scope="row">{{ orderDetail.weekDay.day }}</th>
               <td><input ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
-              <!-- <td>
-                <a :href="currentMenu" target="_blank"> Menu </a>  
-              </td> -->
+              <td>
+                <a :href="currentMenu.path" target="_blank"> Menu </a>  
+              </td>
             </tr>
 
           </tbody>
         </table>
 
       </div>  
-
-      <div id="menuImageContainer" class="container-fluid">
-
-
-      </div>
 
     </div>
   </div>
@@ -105,24 +100,11 @@ export default class UserOrder extends Vue{
       headers: constants.DEFAULT_HEADERS,
       params: { week: val }
     }).then( (response: any) => {
-      debugger;
       if(response.data){
         this.action = 'edit';
-
         this.weeklyOrder = response.data;
-
-        // this.weeklyOrder.orderDetails.forEach((orderDetail, index, ordersArray) => {
-        //   response.data.orderDetails.forEach((o: any) => {
-        //     if(orderDetail.weekDay.day === o.weekDay.day){
-        //       ordersArray[index] = o;
-        //     }
-        //   });
-        // });
-
-        // console.log(this.weeklyOrder);
-
-        //so that the view is 'refreshed'            
-        // this.simulateInput((<any>this.$refs.monday)[0]);
+        //sort
+        this.sortByWeekDay(this.weeklyOrder.orderDetails);
       }else{
           this.action = 'add';
           this.weeklyOrder = {
@@ -185,7 +167,6 @@ export default class UserOrder extends Vue{
   }
 
   private placeOrder(){
-    debugger;
     this.weeklyOrder.validFrom = this.currentMenu.validFrom,
     this.weeklyOrder.validTo = this.currentMenu.validTo;
     this.weeklyOrder.user = constants.getObjectCookie("user");
@@ -245,8 +226,6 @@ export default class UserOrder extends Vue{
 
     }
 
-
-
   }
 
   private simulateInput(inp: any) {
@@ -256,12 +235,12 @@ export default class UserOrder extends Vue{
     inp.dispatchEvent(ev);
   }
 
-  // private getOrderByWeekday(day: string){
-  //   let found = this.ordersList.find((element: any) => {
-  //     return element.weekDay == day;
-  //   });
-  //   return (<any>found).orderText;
-  // }
+  private sortByWeekDay(arr: Array<any>){
+    var order = { Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5 };
+    arr.sort((a: any, b: any) => {
+      return (<any>order)[a.weekDay.day] - (<any>order)[b.weekDay.day];
+    });
+  }
 
 }
 </script>

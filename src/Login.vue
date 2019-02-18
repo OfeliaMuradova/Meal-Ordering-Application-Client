@@ -9,12 +9,12 @@
               <form class="form-signin" method="post" action="login" >
                 <div class="form-label-group">
                   <label for="inputUsername">Username</label>
-                  <input type="text" id="inputUsername" ref="inputUsername" class="form-control" :data-state="usernameState" autofocus>  <!--v-model="username"-->
+                  <input type="text" id="inputUsername" ref="inputUsername" v-model="username" class="form-control" :data-state="usernameState" autofocus >  
                   <label id="errorUsername" ref="errorUsername">Please enter a username!</label>
                 </div>
                 <div class="form-label-group">
                    <label for="inputPassword">Password</label>
-                   <input type="password" id="inputPassword" ref="inputPassword" class="form-control" :data-state="passwordState" > <!--v-model="password"-->
+                   <input type="password" id="inputPassword" ref="inputPassword" v-model="password" class="form-control" :data-state="passwordState" > 
                    <label id="errorPassword" ref="errorPassword">Please enter a password!</label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login" type="button">Sign in</button>
@@ -55,15 +55,13 @@ export default class Login extends Vue{
   };
 
   private login() {
-    //todo: uncommment
-
-    //if(constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorUsername)
-    //    && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorPassword) ){
+    if(constants.validatorEmpty(<Element>this.$refs.inputUsername, <Element>this.$refs.errorUsername)
+       && constants.validatorEmpty(<Element>this.$refs.inputPassword, <Element>this.$refs.errorPassword) ){
         let data = {
-          //username: this.username,
-          //password: this.password
-          username: 'user',
-          password: 'admin'
+          username: this.username,
+          password: this.password
+          // username: 'user',
+          // password: 'admin'
         }
 
         axios.post( constants.SERVERURL + '/login', data, {
@@ -104,7 +102,7 @@ export default class Login extends Vue{
             console.log(error.response)
             this.$router.replace({ name: "login" });
         });
-
+    }
   }
 
 }

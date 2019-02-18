@@ -192,7 +192,6 @@ export default class AdminForm extends Vue{
             axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, editedCompany, {
                 headers: constants.DEFAULT_HEADERS
                 }).then( (response: any) => {
-                    debugger;
                     location.reload();
                 })
                 .catch((error: any) => {
@@ -236,7 +235,6 @@ export default class AdminForm extends Vue{
   }
 
   private prepareEdit(company: Company, id: number){
-    debugger;
     this.action = 'edit';
     this.addedOrUpdatedCompany = company;
     this.addedOrUpdatedCompanyID = id;

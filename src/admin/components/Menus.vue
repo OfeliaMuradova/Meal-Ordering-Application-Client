@@ -158,8 +158,6 @@ export default class Menus extends Vue{
     axios.delete(constants.SERVERURL + '/admin/menus/' + id, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
-          debugger;
-          console.log(response);
           location.reload();
         })
         .catch((error: any) => {

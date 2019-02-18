@@ -130,7 +130,6 @@ export default class Profile extends Vue{
   }
 
   private editUserProfile(){
-    debugger;
     axios.put(constants.SERVERURL + '/user/' + this.user.id, this.user, {
       headers: constants.DEFAULT_HEADERS
       }).then( (response: any) => {
@@ -154,11 +153,9 @@ export default class Profile extends Vue{
         alert("Passwords should match");
       }
       else{
-        debugger;
         axios.post(constants.SERVERURL + '/user/changePassword/' + this.user.id, { oldPassword: this.oldPassword, newPassword: this.newPassword }, {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
-          debugger;
           alert("Password successfully changed!");
           location.reload();
         })
@@ -172,7 +169,6 @@ export default class Profile extends Vue{
   }
 
   private switchVisibility(event: any) {
-    debugger;
     let span = <Element>event.target;
     let input = <Element>span.previousSibling;
 

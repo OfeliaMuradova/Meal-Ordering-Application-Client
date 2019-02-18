@@ -186,7 +186,6 @@ function checkAuth(){
     cookies.forEach((cookie: string) => {
       if(cookie.startsWith("access_token")){
         var parts = cookie.split("=");
-        //console.log(parts[1]);
         token = parts[1];
       }
   });
@@ -195,18 +194,4 @@ function checkAuth(){
     loggedIn = true;
 }
 
-
-
 export default router
-
-    /*,
-    {
-      path: '/logged',
-      name: 'logged',
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import( './components/layout/Logged.vue')
-    }
-    
-  ]
-})*/

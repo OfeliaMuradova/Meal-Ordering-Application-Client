@@ -59,7 +59,7 @@
                 <label class="top">E-mail</label>
                 <input type="email" class="form-control user-data" ref="inputEmail" placeholder="Enter email" v-model="addedOrUpdatedUser.email">
                 <label class="error" ref="errorEmptyEmail">* This field is required</label>
-                <label class="error" ref="errorWrongEmail">Please enter a valid email</label>
+                <!-- <label class="error" ref="errorWrongEmail">Please enter a valid email</label> -->
               </div>
               <div class="col">
                 <label class="top">Phone number</label>
