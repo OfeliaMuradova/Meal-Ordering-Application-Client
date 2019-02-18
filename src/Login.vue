@@ -61,6 +61,10 @@ export default class Login extends Vue{
           username: this.username,
           password: this.password
         }
+//todo: add company select week
+//add/edit menu for existing in db week
+
+
 
         axios.post( constants.SERVERURL + '/login', data, {
           headers: {
