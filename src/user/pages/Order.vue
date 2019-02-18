@@ -12,29 +12,29 @@
             </select>
           </div>
         </div>
-            <table class="table table-striped table-hover">
-              <caption>Enter the numbers (e.g. E1, E3 etc.) into the input fields 
-                <button type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
-              </caption>
+        <table class="table table-striped table-hover">
+          <caption>Enter the numbers (e.g. E1, E3 etc.) into the input fields 
+            <button type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
+          </caption>
 
-              <thead>
-                <tr>
-                  <th scope="col"> </th>
-                  <th scope="col">Order meals</th>
-                  <!-- <th scope="col">Menu</th> -->
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
-                  <th scope="row">{{ orderDetail.weekDay.day }}</th>
-                  <td><input type="text" class="form-control" aria-describedby="meals" placeholder="Enter meals" v-model="orderDetail.orderText"></td>
-                  <!-- <td>
-                    <a :href="currentMenu" target="_blank"> Menu </a>  
-                  </td> -->
-                </tr>
+          <thead>
+            <tr>
+              <th scope="col"> </th>
+              <th scope="col">Order meals</th>
+              <!-- <th scope="col">Menu</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
+              <th scope="row">{{ orderDetail.weekDay.day }}</th>
+              <td><input ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
+              <!-- <td>
+                <a :href="currentMenu" target="_blank"> Menu </a>  
+              </td> -->
+            </tr>
 
-              </tbody>
-            </table>
+          </tbody>
+        </table>
 
       </div>  
 
@@ -91,44 +91,54 @@ export default class UserOrder extends Vue{
   onChildChanged(val: string, oldVal: string) {
     axios.get(constants.SERVERURL + '/orders/orderMenus', {
       headers: constants.DEFAULT_HEADERS,
-      params: {
-        week: val
-      }
+      params: { week: val }
       }).then( (response: any) => {
-        this.currentMenu = response.data[0];
+        if(response.data)
+          this.currentMenu = response.data[0];
       })
       .catch((error: any) => {
         console.log(error.response)
     });
 
-    // axios.get(constants.SERVERURL + '/orders/edit', {
-    //   headers: constants.DEFAULT_HEADERS,
-    //   params: {
-    //     week: val
-    //   }
-    //   }).then( (response: any) => {
-    //     if(response.data){
-    //       var ordersList = response.data.orderDetails.map((orderDetail: OrderDetails) => ( {weekDay: orderDetail.weekDay.day, orderText: orderDetail.orderText}) );
+    //get an order for chosen week
+    axios.get(constants.SERVERURL + '/orders/edit', {
+      headers: constants.DEFAULT_HEADERS,
+      params: { week: val }
+    }).then( (response: any) => {
+      debugger;
+      if(response.data){
+        this.action = 'edit';
 
-    //       ordersList.forEach((order: any)=>{
-    //         (<any>this.currentOrders)[order.weekDay] = order.orderText;
-    //       });
-    //     }else{
-    //       ordersList = [];
-    //       this.currentOrders = {
-    //         Monday: '',
-    //         Tuesday: '',
-    //         Wednesday: '',
-    //         Thursday: '',
-    //         Friday: '',
-    //       }
-    //     }
+        this.weeklyOrder = response.data;
 
-    //   })
-    //   .catch((error: any) => {
-    //     console.log(error.response)
-    // });
+        // this.weeklyOrder.orderDetails.forEach((orderDetail, index, ordersArray) => {
+        //   response.data.orderDetails.forEach((o: any) => {
+        //     if(orderDetail.weekDay.day === o.weekDay.day){
+        //       ordersArray[index] = o;
+        //     }
+        //   });
+        // });
 
+        // console.log(this.weeklyOrder);
+
+        //so that the view is 'refreshed'            
+        // this.simulateInput((<any>this.$refs.monday)[0]);
+      }else{
+          this.action = 'add';
+          this.weeklyOrder = {
+            orderDetails: [
+              { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Monday', englishName: 'Monday' } },
+              { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Tuesday', englishName: 'Tuesday' } },
+              { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Wednesday', englishName: 'Wednesday' } },
+              { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Thursday', englishName: 'Thursday' } },
+              { menu: this.currentMenu, orderText: '', weekDay: { id: null, day: 'Friday', englishName: 'Friday' } }
+            ]
+          };
+      }
+    })
+    .catch((error: any) => {
+      console.log(error.response)
+    });
   }
 
   @Watch('$route', { immediate: true, deep: true })
@@ -149,16 +159,15 @@ export default class UserOrder extends Vue{
               }
             });
           });
-
-          console.log(this.weeklyOrder.orderDetails)
-
+          //so that the view is 'refreshed'            
+          this.simulateInput((<any>this.$refs.monday)[0]);
         }else{
           this.action = 'add';
         }
       })
       .catch((error: any) => {
         console.log(error.response)
-    });
+      });
 
 			axios.get(constants.SERVERURL + '/orders/orderMenus', {
 				headers: constants.DEFAULT_HEADERS,
@@ -177,23 +186,31 @@ export default class UserOrder extends Vue{
 
   private placeOrder(){
     debugger;
+    this.weeklyOrder.validFrom = this.currentMenu.validFrom,
+    this.weeklyOrder.validTo = this.currentMenu.validTo;
+    this.weeklyOrder.user = constants.getObjectCookie("user");
+
     if(this.action == 'add'){
-      this.weeklyOrder = {
-        validFrom: this.currentMenu.validFrom,
-        validTo: this.currentMenu.validTo,
-        user: constants.getObjectCookie("user")
-      }
-      
       axios.get(constants.SERVERURL + '/orders/weekDays', {
         headers: constants.DEFAULT_HEADERS,
         }).then( (response: any) => {
           var weekDays: Array<WeekDay> = response.data;
 
           this.weeklyOrder.orderDetails.forEach((order, index)=>{
+            this.weeklyOrder.orderDetails[index].menu = this.currentMenu;
             weekDays.forEach((weekDay, index)=>{
               if(order.weekDay.day === weekDay.day)
-                order.weekDay.id = weekDay.id;
+                this.weeklyOrder.orderDetails[index].weekDay.id = weekDay.id;
             });
+          });
+
+          axios.post(constants.SERVERURL + '/orders/', this.weeklyOrder, {
+            headers: constants.DEFAULT_HEADERS,
+            }).then( (response: any) => {
+              window.location.reload();
+            })
+            .catch((error: any) => {
+              console.log(error.response)
           });
 
         })
@@ -201,15 +218,42 @@ export default class UserOrder extends Vue{
           console.log(error.response)
       });
 
-      console.log(this.weeklyOrder);
-    
     }
     else if(this.action == 'edit'){
-      debugger;
+      //get the id of current order
+      axios.get(constants.SERVERURL + '/orders/edit', {
+        headers: constants.DEFAULT_HEADERS,
+        params: { week: "current" }
+      }).then( (response: any) => {
+          this.weeklyOrder.id = response.data.id;
+
+          //update order
+          axios.put(constants.SERVERURL + '/orders/' + this.weeklyOrder.id, this.weeklyOrder, {
+            headers: constants.DEFAULT_HEADERS,
+            params: { week: "current" }
+          }).then( (response: any) => {
+            window.location.reload();
+          })
+          .catch((error: any) => {
+            console.log(error.response)
+          });
+
+      })
+      .catch((error: any) => {
+        console.log(error.response)
+      });
 
     }
 
 
+
+  }
+
+  private simulateInput(inp: any) {
+    var ev = new Event('input');
+    
+    inp.value = inp.value + ' ';
+    inp.dispatchEvent(ev);
   }
 
   // private getOrderByWeekday(day: string){
