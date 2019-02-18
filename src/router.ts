@@ -4,7 +4,6 @@ import Login from '@/Login.vue'
 
 import Home from '@/user/pages/Home.vue'
 import UserOrder from '@/user/pages/Order.vue'
-import Menus from '@/user/pages/Menus.vue'
 import Profile from '@/user/components/Profile.vue'
 import Slider from '@/user/components/Slider.vue'
 import Contact from '@/user/components/Contact.vue'
@@ -40,15 +39,6 @@ let router = new Router({
               admin: false
             },
             props: true,
-          },
-          {
-            path: '/menus',
-            name: 'menus',
-            component: Menus,
-            meta: { 
-              requiresAuth: true,
-              admin: false
-            }
           },
           {
             path: '/order',
@@ -146,7 +136,7 @@ let router = new Router({
             },
           },
           {
-            path: '/order',
+            path: '/admin/order',
             name: 'adminOrder',
             component: UserOrder,
             meta: { 

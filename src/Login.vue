@@ -61,15 +61,10 @@ export default class Login extends Vue{
           username: this.username,
           password: this.password
         }
-//todo: add company select week
-//add/edit menu for existing in db week
-//delete password from user popup
-//orders are always disabled ra uqeni :D
-//change passwordis dros token undefined ari incognitoze
-//useris rolis shecvlisas rolis id arasworad igeb
 
-
-
+        //todo: 
+        //daloginebis dros token plaxoi
+        //orders are always disabled
 
         axios.post( constants.SERVERURL + '/login', data, {
           headers: {
@@ -92,6 +87,7 @@ export default class Login extends Vue{
                 }
               }
 
+              constants.delete_cookie("access_token");
               constants.set_cookie("access_token", response.data.token);
               constants.set_cookie("user", JSON.stringify(this.user));
 
@@ -107,6 +103,9 @@ export default class Login extends Vue{
           })
           .catch((error: any) => {
             console.log(error.response)
+            if (error.response.status === 401) {
+              alert("Failed to login");
+            }
             this.$router.replace({ name: "login" });
         });
     }

@@ -50,7 +50,6 @@
                 <label class="error" ref="errorEmptyPath">* This field is required</label>
                 <label class="error" ref="errorWrongURL">Please enter a valid url</label>
                 <label for="inputMenuWeekNumber">Week:</label>
-
                 <div class="form-group">
                   <input type="week" class="form-control" id="weekPicker" min="2019-W01" required v-model="selectedWeek">
                   <label class="error" ref="errorEmptyWebsite">* This field is required</label>
@@ -135,6 +134,9 @@ export default class Menus extends Vue{
                 location.reload();
               })
               .catch((error: any) => {
+                if (error.response.status === 500) {
+                  alert(error.response.data.message);
+                }
                 console.log(error.response)
             });
           } 
@@ -146,6 +148,10 @@ export default class Menus extends Vue{
                 location.reload();
               })
               .catch((error: any) => {
+                if (error.response.status === 500) {
+                  alert(error.response.data.message);
+                }
+
                 console.log(error.response)
             });
           }
@@ -180,21 +186,15 @@ export default class Menus extends Vue{
         menus: []
       }
     };
-    // list the companies
+    
     axios.get(constants.SERVERURL + '/admin/companies/list', {
         headers: constants.DEFAULT_HEADERS
         }).then( (response: any) => {
           this.companiesList = response.data;
-
-          // this.companiesList.forEach((c, i) => {
-          //   this.currentCompanies.values;
-          // });
-
         })
         .catch((error: any) => {
           console.log(error.response)
     });
-      
   }
 
   private prepareEdit(menu: Menu, id: number){
@@ -216,15 +216,15 @@ export default class Menus extends Vue{
       }).then( (response: any) => {
         this.companiesList = response.data;
         
-        //get current menu's company name
-        this.companiesList.forEach((c, i) => {
-          if(c.id === this.addedOrUpdatedMenu.company.id){
+        // //get current menu's company name
+        // this.companiesList.forEach((c, i) => {
+        //   if(c.id === this.addedOrUpdatedMenu.company.id){
             
-            // (<any>this.$refs.companySelect).value = 'value';
+        //     // (<any>this.$refs.companySelect).value = 'value';
             
-            console.log((<any>this.$refs.companySelect))
-          }
-        });
+        //     console.log((<any>this.$refs.companySelect))
+        //   }
+        // });
 
       })
       .catch((error: any) => {

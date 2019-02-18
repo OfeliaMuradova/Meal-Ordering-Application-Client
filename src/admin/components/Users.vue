@@ -68,9 +68,9 @@
                 <label class="top">Position</label>
                 <input type="text" class="form-control user-data" placeholder="Enter position" ref="inputPosition" v-model="addedOrUpdatedUser.position">
                 <label class="error" ref="errorEmptyPosition">* This field is required</label>
-                <label class="top" v-if="action=='add'">Password</label>
-                <input type="password" v-if="action=='add'" class="form-control user-data" placeholder="Enter password" ref="inputPassword" v-model="addedOrUpdatedUser.password">
-                <label class="error" ref="errorEmptyPassword">* This field is required</label>
+                <!-- <label class="top" v-if="action=='add'">Password</label> -->
+                <!-- <input type="password" v-if="action=='add'" class="form-control user-data" placeholder="Enter password" ref="inputPassword" v-model="addedOrUpdatedUser.password"> -->
+                <!-- <label class="error" ref="errorEmptyPassword">* This field is required</label> -->
               </div>
             </div>
             <div class="checkboxes">
@@ -90,7 +90,7 @@
           </div> <!-- modal-body -->
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="constants.reload()">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="reload()">Cancel</button>
             <button v-if="action == 'add'" type="button" class="btn btn-info" @click="addOrUpdateUser">Add</button>
             <button v-else-if="action == 'edit'" type="button" class="btn btn-info" @click="addOrUpdateUser">Submit</button>
           </div>
@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <modal-dialog v-if="showModal" :modalText=modalText></modal-dialog>
+    <!-- <modal-dialog v-if="showModal" :modalText=modalText></modal-dialog> -->
     
   </div>
 </template>
@@ -110,7 +110,7 @@ import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator';
 import * as constants from '@/constants.ts';
 import axios from 'axios';
-import { User } from '@/types';
+import { User, UserRole } from '@/types';
 import Modal from '@/Modal.vue';
 
 @Component({
@@ -120,7 +120,6 @@ import Modal from '@/Modal.vue';
 })
 export default class Users extends Vue{
   @Prop() list: any;
-
   private showModal: boolean = false;
   private modalText: string = '';
   private action: string = '';
@@ -129,7 +128,6 @@ export default class Users extends Vue{
     name: '',
     username: '',
     position: '',
-    password: '',
     email: '',
     phone_number: '',
     userRole: {
@@ -146,7 +144,23 @@ export default class Users extends Vue{
         && constants.validatorEmpty(<Element>this.$refs.inputPhone, <Element>this.$refs.errorEmptyPhone)
         && constants.validatorEmpty(<Element>this.$refs.inputPosition, <Element>this.$refs.errorEmptyPosition)){
       
-          if(this.action == 'add'){
+          //userrolebis wamogeba da dasetva
+
+          //  axios.get(constants.SERVERURL + '/admin/users/user_roles', {
+          //   headers: constants.DEFAULT_HEADERS
+          //   }).then( (response: any) => {
+          //     var userRoles = response.data;
+
+          //     userRoles.forEach((role: UserRole) => {
+          //       if(this.addedOrUpdatedUser.userRole.name === role.name)
+          //         this.addedOrUpdatedUser.userRole = role;
+          //     });
+              
+          //   })
+          //   .catch((error: any) => {
+          //       console.log(error.response)
+          // });              
+
             if(this.addedOrUpdatedUser.userRole.name == 'USER'){
               this.addedOrUpdatedUser.userRole.id = 2;
             }
@@ -156,13 +170,17 @@ export default class Users extends Vue{
             else { 
               alert('Wrong user role!');
             }
-
+            
+          if(this.action == 'add'){
             axios.post(constants.SERVERURL + '/admin/users/', this.addedOrUpdatedUser, {
               headers: constants.DEFAULT_HEADERS
               }).then( (response: any) => {
                 location.reload();
               })
               .catch((error: any) => {
+                if (error.response.status === 500) {
+                  alert(error.response.data.message);
+                }
                 console.log(error.response)
             });           
         }
@@ -173,6 +191,9 @@ export default class Users extends Vue{
                     location.reload();
                 })
                 .catch((error: any) => {
+                if (error.response.status === 500) {
+                  alert(error.response.data.message);
+                }
                   console.log(error.response)
               });
           }
@@ -201,7 +222,6 @@ export default class Users extends Vue{
       name: '',
       username: '',
       position: '',
-      password: '',
       email: '',
       phone_number: '',
       userRole: {
@@ -212,16 +232,13 @@ export default class Users extends Vue{
   }
 
   private prepareEdit(user: User, id: number){
+    this.action = 'edit';
+    this.addedOrUpdatedUser = user;
+    this.addedOrUpdatedUserID = id;
+  }
 
-      // if(user.userRole.name == "ADMIN"){
-      //   this.showModal = true;
-      //   this.modalText = "You can't edit other administrator's data!";
-      // }
-      // else{
-        this.action = 'edit';
-        this.addedOrUpdatedUser = user;
-        this.addedOrUpdatedUserID = id;
-      // }
+  private reload(){
+    window.location.reload();
   }
 
 }

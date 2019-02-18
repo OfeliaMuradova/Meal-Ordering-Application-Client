@@ -14,22 +14,22 @@
         </div>
         <table class="table table-striped table-hover">
           <caption>Enter the numbers (e.g. E1, E3 etc.) into the input fields 
-            <button :disabled="!currentMenu.path" type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
+            <button :disabled="!currentMenu" type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
           </caption>
 
           <thead>
-            <tr>
-              <th scope="col"> </th>
-              <th scope="col">Order meals</th>
-              <th scope="col">Menu</th>
+            <tr class="d-flex">
+              <th scope="col" class="col-2"> </th>
+              <th scope="col" class="col-8">Order meals</th>
+              <th scope="col" class="col-2">Menu</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
-              <th scope="row">{{ orderDetail.weekDay.day }}</th>
-              <td><input :disabled="!currentMenu.path" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
-              <td>
-                <a v-if="currentMenu.path" :href="currentMenu.path" target="_blank"> Menu </a>  
+            <tr scope="row" class="d-flex" v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
+              <th scope="col" class="col-2">{{ orderDetail.weekDay.day }}</th>
+              <td scope="col" class="col-8"><input :disabled="!currentMenu" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
+              <td scope="col" class="col-2">
+                <a v-if="currentMenu" :href="currentMenu" target="_blank"> Menu </a>  
                 <a v-else target="_blank"> No menu provided </a>  
               </td>
             </tr>
@@ -127,6 +127,7 @@ export default class UserOrder extends Vue{
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(route: any) {
 		if (route.name === 'order') { 
+      debugger;
       //get an order for current week
       axios.get(constants.SERVERURL + '/orders/edit', {
         headers: constants.DEFAULT_HEADERS,

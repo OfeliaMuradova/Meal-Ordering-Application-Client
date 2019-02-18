@@ -75,17 +75,17 @@
                     <input type="text" class="form-control" ref="inputMenupath" id="menupath" aria-describedby="help" placeholder="Enter path" v-model="addedOrUpdatedCompany.menus[0].path">
                     <label class="error" ref="errorMenupath">* This field is required</label>
                   </div>
-                    <!-- <label for="webUrl">Week dates</label> -->
                 </div>
               </div>
-              <!-- <div class="row">
+              <div class="row">
                 <div class="col">
+                  <label for="inputMenuWeekNumber">Week:</label>
                   <div class="form-group">
                     <input type="week" class="form-control" id="weekPicker" min="2019-W01" required v-model="selectedWeek">
                     <label class="error" ref="errorEmptyWebsite">* This field is required</label>
-                  </div>  
+                  </div> 
                 </div>
-              </div> -->
+              </div>
             </div>
           </div> <!-- modal-body -->
 
@@ -170,6 +170,7 @@ export default class AdminForm extends Vue{
         && constants.validatorURL(<Element>this.$refs.inputWebsite, <Element>this.$refs.errorURL)){
 
           if(this.action == 'add'){
+            debugger;
             if(this.selectedWeek) {
               this.addedOrUpdatedCompany.menus[0].validFrom = constants.formatDate(constants.getDateOfWeek(this.selectedWeek));
               this.addedOrUpdatedCompany.menus[0].validTo = constants.formatDate(constants.getFriday(constants.getDateOfWeek(this.selectedWeek)));
@@ -184,10 +185,11 @@ export default class AdminForm extends Vue{
             });
           }
           else if(this.action == 'edit'){
+            debugger;
             let editedCompany = {
               id: this.addedOrUpdatedCompany.id,
               name: this.addedOrUpdatedCompany.name,
-              webPageUrl: this.addedOrUpdatedCompany.webPageUrl,
+              webPageUrl: this.addedOrUpdatedCompany.webPageUrl
             }
             axios.put(constants.SERVERURL + '/admin/companies/' + this.addedOrUpdatedCompanyID, editedCompany, {
                 headers: constants.DEFAULT_HEADERS
