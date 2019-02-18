@@ -140,7 +140,7 @@ export default class Menus extends Vue{
           } 
         }
         else if(this.action == 'edit'){
-          axios.put(constants.SERVERURL + '/admin/orders/change_status/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
+          axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
               headers: constants.DEFAULT_HEADERS
               }).then( (response: any) => {
                 location.reload();
@@ -201,6 +201,7 @@ export default class Menus extends Vue{
     this.action = 'edit';
     
     this.addedOrUpdatedMenu = {
+      id: menu.id,
       path: menu.path,
       validFrom: menu.validFrom,
       validTo: menu.validTo,
@@ -218,10 +219,10 @@ export default class Menus extends Vue{
         //get current menu's company name
         this.companiesList.forEach((c, i) => {
           if(c.id === this.addedOrUpdatedMenu.company.id){
-            debugger;
-            (<any>this.$refs.companySelect).selected = c.name;
             
-            console.log((<any>this.$refs.companySelect).text)
+            // (<any>this.$refs.companySelect).value = 'value';
+            
+            console.log((<any>this.$refs.companySelect))
           }
         });
 

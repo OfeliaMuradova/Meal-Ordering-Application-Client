@@ -63,6 +63,11 @@ export default class Login extends Vue{
         }
 //todo: add company select week
 //add/edit menu for existing in db week
+//delete password from user popup
+//orders are always disabled ra uqeni :D
+//change passwordis dros token undefined ari incognitoze
+//useris rolis shecvlisas rolis id arasworad igeb
+
 
 
 
