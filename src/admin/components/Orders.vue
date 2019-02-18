@@ -198,12 +198,13 @@ export default class Orders extends Vue{
    }
 
   private cancelOrder(order: Order){   
-    axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, {
+     axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, null, {
       headers: constants.DEFAULT_HEADERS,
-      params: { name: "Cancelled" },
+        params: {
+          name: "Cancelled"
+        }
       }).then( (response: any) => {
-        debugger;
-        
+        window.location.reload();
       })
       .catch((error: any) => {
         console.log(error.response)
@@ -212,15 +213,13 @@ export default class Orders extends Vue{
   }
 
   private confirmOrder(order: Order){
-    debugger;
-    console.log(order);
-
-    axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, {
+    axios.post(constants.SERVERURL + '/admin/orders/set_status/' + order.id, null, {
       headers: constants.DEFAULT_HEADERS,
-      params: {name: "Confirmed"},
+        params: {
+          name: "Confirmed"
+        }
       }).then( (response: any) => {
-        debugger;
-        
+        window.location.reload();
       })
       .catch((error: any) => {
         console.log(error.response)

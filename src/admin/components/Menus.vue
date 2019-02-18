@@ -56,7 +56,8 @@
                   <label class="error" ref="errorEmptyWebsite">* This field is required</label>
                 </div> 
                 <label for="companySelect">Company:</label>
-                <select id="companySelect" required class="mb-3" v-model="companyId">
+                <select id="companySelect" ref="companySelect" required class="mb-3" v-model="companyId">
+                  <!-- <option :value="null" selected disabled hidden ref="editedCompanyName"> </option> -->
                   <option v-for="(company, index) in companiesList" :key="index" :value="company.id">{{ company.name }}</option>
                 </select>
                 <label class="error" ref="errorEmptyCompany">Please choose a company</label>
@@ -139,7 +140,7 @@ export default class Menus extends Vue{
           } 
         }
         else if(this.action == 'edit'){
-          axios.put(constants.SERVERURL + '/admin/menus/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
+          axios.put(constants.SERVERURL + '/admin/orders/change_status/' + this.addedOrUpdatedMenuID, this.addedOrUpdatedMenu, {
               headers: constants.DEFAULT_HEADERS
               }).then( (response: any) => {
                 location.reload();
@@ -210,17 +211,23 @@ export default class Menus extends Vue{
     this.addedOrUpdatedMenuID = id;
 
     axios.get(constants.SERVERURL + '/admin/companies/list', {
-        headers: constants.DEFAULT_HEADERS
-        }).then( (response: any) => {
-          this.companiesList = response.data;
+      headers: constants.DEFAULT_HEADERS
+      }).then( (response: any) => {
+        this.companiesList = response.data;
+        
+        //get current menu's company name
+        this.companiesList.forEach((c, i) => {
+          if(c.id === this.addedOrUpdatedMenu.company.id){
+            debugger;
+            (<any>this.$refs.companySelect).selected = c.name;
+            
+            console.log((<any>this.$refs.companySelect).text)
+          }
+        });
 
-          // this.companiesList.forEach((c, i) => {
-          //   this.currentCompanies.values()
-          // });
-
-        })
-        .catch((error: any) => {
-          console.log(error.response)
+      })
+      .catch((error: any) => {
+        console.log(error.response)
     });
   }
 
