@@ -14,7 +14,7 @@
         </div>
         <table class="table table-striped table-hover">
           <caption>Enter the numbers (e.g. E1, E3 etc.) into the input fields 
-            <button type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
+            <button :disabled="!currentMenu.path" type="button" class="btn btn-info float-right" v-on:click="placeOrder()">Place order</button>  
           </caption>
 
           <thead>
@@ -27,9 +27,10 @@
           <tbody>
             <tr v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
               <th scope="row">{{ orderDetail.weekDay.day }}</th>
-              <td><input ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
+              <td><input :disabled="!currentMenu.path" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
               <td>
-                <a :href="currentMenu.path" target="_blank"> Menu </a>  
+                <a v-if="currentMenu.path" :href="currentMenu.path" target="_blank"> Menu </a>  
+                <a v-else target="_blank"> No menu provided </a>  
               </td>
             </tr>
 

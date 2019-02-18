@@ -23,7 +23,7 @@
             <td class="col-2 scrollable">{{ user.phone_number }}</td>
             <td class="col-1" align="right">  
               <img id="imgEdit" src="@/assets/edit1.png" v-if="user.userRole.name == 'USER'" data-toggle="modal" data-target="#addUserModal" @click="prepareEdit(user, user.id)">
-              <img id="imgDelete" src="@/assets/delete.png" @click="deleteUser(user.id)">
+              <img id="imgDelete" src="@/assets/delete.png" v-if="user.userRole.name == 'USER'" @click="deleteUser(user.id)">
             </td>
           </tr>
         </tbody>

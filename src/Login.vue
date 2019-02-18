@@ -60,8 +60,6 @@ export default class Login extends Vue{
         let data = {
           username: this.username,
           password: this.password
-          // username: 'user',
-          // password: 'admin'
         }
 
         axios.post( constants.SERVERURL + '/login', data, {
