@@ -58,6 +58,7 @@
                 <select id="companySelect" ref="companySelect" required class="mb-3" v-model="companyId">
                   <!-- <option :value="null" selected disabled hidden ref="editedCompanyName"> </option> -->
                   <option v-for="(company, index) in companiesList" :key="index" :value="company.id">{{ company.name }}</option>
+                  <!-- v-bind="addedOrUpdatedMenu.company.id == index? selected : ''" -->
                 </select>
                 <label class="error" ref="errorEmptyCompany">Please choose a company</label>
 
@@ -199,7 +200,9 @@ export default class Menus extends Vue{
 
   private prepareEdit(menu: Menu, id: number){
     this.action = 'edit';
-    
+
+    this.companyId = menu.company.id;
+
     this.addedOrUpdatedMenu = {
       id: menu.id,
       path: menu.path,
