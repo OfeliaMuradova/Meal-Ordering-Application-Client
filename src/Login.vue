@@ -62,10 +62,6 @@ export default class Login extends Vue{
           password: this.password
         }
 
-        //todo: 
-        //daloginebis dros token plaxoi
-        //orders are always disabled
-
         axios.post( constants.SERVERURL + '/login', data, {
           headers: {
                 'Accept': 'application/json',
@@ -91,13 +87,18 @@ export default class Login extends Vue{
               constants.set_cookie("access_token", response.data.token);
               constants.set_cookie("user", JSON.stringify(this.user));
 
-              if(this.user.userRole.name == "USER")          
+              if(this.user.userRole.name == "USER") {         
                 this.$router.replace({ name: "slider"});
-              else if(this.user.userRole.name == "ADMIN")              
+                window.location.reload();
+              }
+              else if(this.user.userRole.name == "ADMIN"){
                 this.$router.replace({ name: "admin" });
+                window.location.reload();
+              }
               else{
                 alert('Something went wrong!');
                 this.$router.replace({ name: "login" });
+                window.location.reload();
               }
 
           })
