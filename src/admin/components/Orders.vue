@@ -402,5 +402,8 @@ tr:after {
 }
 
 
+#pageTitle{
+  font: normal normal normal 28px Raleway, sans-serif;  
+}
 </style>
 

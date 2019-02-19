@@ -264,8 +264,9 @@ export default class AdminForm extends Vue{
   margin-top: 4px;
 }
 
-h4{
+#form h4{
   color: #606060;
+  font: normal normal normal 26px Raleway, sans-serif;
 }
 
 #imgDelete{

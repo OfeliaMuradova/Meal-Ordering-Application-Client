@@ -17,7 +17,7 @@
                    <input type="password" id="inputPassword" ref="inputPassword" v-model="password" @keyup.enter="login()" class="form-control" :data-state="passwordState" > 
                    <label id="errorPassword" ref="errorPassword">Please enter a password!</label>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login()" type="button">Sign in</button>
+                <button class="btn btn-lg btn-info btn-block text-uppercase" v-on:click="login()" type="button">Sign in</button>
               </form>
             </div>
           </div>
@@ -133,6 +133,15 @@ export default class Login extends Vue{
     margin-bottom: 2rem;
     font-weight: 300;
     font-size: 1.5rem;
+    font: normal normal normal 30px Raleway, sans-serif;
+  }
+
+  label{
+    font: normal normal normal 18px Raleway, sans-serif;
+  }
+
+  input{
+    margin-bottom: 5px;
   }
 
   .card-signin .card-body {

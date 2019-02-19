@@ -1,19 +1,12 @@
 <template>
-  <div class="container">
-    <div class="text-center">
-      <h2>Contact</h2>
+  <div >
+    <div>
+      <img alt="Nehmen Sie Kontakt zur community4you AG auf: Nutzen Sie unsere Online-Anfrage, kontaktieren Sie uns per Telefon, Skype oder E-Mail. Wir freuen uns auf Sie!" 
+          title="Nehmen Sie Kontakt zur community4you AG auf!" 
+          src="@/assets/contact.png" width="100%">
     </div>
-	  <div class="row">
-      <div class="col col-md-5">
-        <div class="content-item">
-          <div class="img-box">
-            <img alt="Nehmen Sie Kontakt zur community4you AG auf: Nutzen Sie unsere Online-Anfrage, kontaktieren Sie uns per Telefon, Skype oder E-Mail. Wir freuen uns auf Sie!" title="Nehmen Sie Kontakt zur community4you AG auf!" src="https://www.community4you.de/de/media/unternehmen/kontakt/image/image/0-kontakt.jpg" width="180">
-          </div>
-        </div>
-      </div>
-      <div class="content-item col col-md-7">
-          <div class="rechts">
-            <!-- <p>Nutzen Sie unsere <a title="Online-Anfrage" href="https://www.community4you.de/de/media/unternehmen/kontakt/image/image/0-kontakt.jpg">Online-Anfrage</a>&nbsp;oder kontaktieren Sie uns per <strong>Telefon&nbsp;</strong>oder&nbsp;<strong>E-Mail</strong>. Wir freuen uns auf Ihre Fragen!</p> -->
+	  <div >
+      <div class="content-item">
             <table border="0">
               <tbody>
                 <tr>
@@ -39,9 +32,14 @@
                 </tr>
               </tbody>
             </table>
-          </div>
       </div>
     </div>
+
+
+    <footer class="bg-light" id="page-footer">
+      Copyright 2019 &copy; All rights reserved
+    </footer>
+
   </div>
 </template>
 
@@ -67,11 +65,6 @@ export default class Contact extends Vue{
   margin-bottom: 30px;
 }
 
-.img-box{
-  text-align: right;
-  padding-right: 20px;
-}
-
 h2{
   color: #666666;
 }
@@ -82,6 +75,25 @@ td {
   color: #666666;
   padding: 10px;
 }
+
+  #page-footer{
+    color: rgba(0, 0, 0, 0.5);
+    height: 100px;
+    line-height: 100px;
+    vertical-align: center;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+  }
+
+  .content-item{
+    margin: 40px;
+
+    table{
+      margin: 0 auto;
+    }
+  }
 
 
 </style>

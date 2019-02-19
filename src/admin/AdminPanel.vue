@@ -144,6 +144,17 @@ export default class AdminPanel extends Vue{
 <style scoped lang="scss">
 #left-nav a{
   color: rgba(0, 0, 0, 0.5);
+  font: normal normal 666 19px Raleway, sans-serif;
+  margin-top: 15px;
+}
+
+nav{
+  font: normal normal normal 19px Raleway, sans-serif;
+  letter-spacing: 1px;
+}
+
+#left-nav a:hover{
+  color: rgba(0, 0, 0, 0.65);
 }
 
 #bootstrap-overrides-right .nav-link {

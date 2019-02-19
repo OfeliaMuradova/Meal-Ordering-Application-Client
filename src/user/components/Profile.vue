@@ -1,10 +1,10 @@
 <template>
   <div id="profile" class="container">
     <div class="row" style="align-items: center;">
-      <div class="col-md-5 img">
+      <div class="col-md-6 img">
         <img src="@/assets/profile.png"  alt="Profile picture" class="img-rounded">
       </div>
-      <div class="col-md-5 details">
+      <div class="col-md-3 details">
         <blockquote>
           <div id="name">
             <b><h3>{{ user.name }}</h3></b>
@@ -195,7 +195,7 @@ export default class Profile extends Vue{
 
 <style lang="scss" scoped>
 #profile{
-  margin: 0 auto;
+  margin: 40px auto;
 
   .img{
     text-align:center;
@@ -284,6 +284,7 @@ export default class Profile extends Vue{
 
   div#name{
     margin-bottom: 15px;
+    font: normal normal bold 30px Raleway, sans-serif;
   }
 
 }

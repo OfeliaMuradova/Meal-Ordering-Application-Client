@@ -28,13 +28,15 @@
           <tbody>
             <tr scope="row" class="d-flex" v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
               <th scope="col" class="col-2">{{ orderDetail.weekDay.day }}</th>
-              <td scope="col" v-if="orderDetail.orderStatus" class="col-6"><input :disabled="!currentMenu || orderDetail.orderStatus.name == 'Confirmed'" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
+              <td scope="col" v-if="orderDetail.orderStatus" class="col-6">
+                <input :disabled="!currentMenu || orderDetail.orderStatus.name == 'Confirmed'" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText">
+              </td>
               <td scope="col" v-else class="col-6"><input :disabled="!currentMenu" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
               <td scope="col" class="col-2">
                 <a v-if="currentMenu" :href="currentMenu.path" target="_blank"> Menu </a>
                 <a v-else target="_blank"> No menu provided </a>  
               </td>
-              <td v-if="orderDetail.orderStatus" scope="col" class="col-1">{{ orderDetail.orderStatus.name }}</td>
+              <td v-if="orderDetail.orderStatus && orderDetail.orderText" scope="col" class="col-1">{{ orderDetail.orderStatus.name }}</td>
               <td v-else scope="col" class="col-2"></td>
             </tr>
 
@@ -186,7 +188,18 @@ export default class UserOrder extends Vue{
   }
 
   private placeOrder(){
-    this.weeklyOrder.validFrom = this.currentMenu.validFrom,
+    // console.log(this.weeklyOrder.orderDetails)
+    // this.weeklyOrder.orderDetails.forEach((orderDetail, index, arr)=>{
+    //   debugger;
+    //   if(orderDetail.orderStatus.name === "Confirmed"){   // || !orderDetail.orderText
+    //     arr.splice(index, 1);
+    //     console.log(this.weeklyOrder.orderDetails)
+    //   }
+    // });
+
+    console.log(this.weeklyOrder.orderDetails);
+
+    this.weeklyOrder.validFrom = this.currentMenu.validFrom;
     this.weeklyOrder.validTo = this.currentMenu.validTo;
     this.weeklyOrder.user = constants.getObjectCookie("user");
 
@@ -285,11 +298,20 @@ h2{
 
   h2{
     float: left;
+    font: normal normal normal 30px Raleway, sans-serif;
+    letter-spacing: 1px;
+    font-weight: 555;
   }
 
   .dropdown{
     right: 0;
   }
+}
+
+.table{
+  margin-top: 10px;
+  font: normal normal 16px tahoma, sans-serif;
+  letter-spacing: 0.3px;
 }
 
 </style>
