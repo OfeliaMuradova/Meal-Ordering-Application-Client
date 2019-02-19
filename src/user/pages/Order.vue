@@ -210,6 +210,9 @@ export default class UserOrder extends Vue{
               window.location.reload();
             })
             .catch((error: any) => {
+              if (error.response.status == 500){
+                alert(error.response.data.message);
+              }
               console.log(error.response)
           });
 
@@ -225,7 +228,6 @@ export default class UserOrder extends Vue{
         headers: constants.DEFAULT_HEADERS,
         params: { week: this.week }
       }).then( (response: any) => {
-        debugger;
           this.weeklyOrder.id = response.data.id;
 
           //update order
@@ -236,6 +238,9 @@ export default class UserOrder extends Vue{
             window.location.reload();
           })
           .catch((error: any) => {
+            if (error.response.status == 500){
+              alert(error.response.data.message);
+            }
             console.log(error.response)
           });
 
