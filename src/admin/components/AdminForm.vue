@@ -170,7 +170,6 @@ export default class AdminForm extends Vue{
         && constants.validatorURL(<Element>this.$refs.inputWebsite, <Element>this.$refs.errorURL)){
 
           if(this.action == 'add'){
-            debugger;
             if(this.selectedWeek) {
               this.addedOrUpdatedCompany.menus[0].validFrom = constants.formatDate(constants.getDateOfWeek(this.selectedWeek));
               this.addedOrUpdatedCompany.menus[0].validTo = constants.formatDate(constants.getFriday(constants.getDateOfWeek(this.selectedWeek)));
@@ -181,11 +180,13 @@ export default class AdminForm extends Vue{
                 location.reload();
               })
               .catch((error: any) => {
+                  if(error.response.status == 500){
+                    alert(error.response.data.message);
+                  }
                 console.log(error.response)
             });
           }
           else if(this.action == 'edit'){
-            debugger;
             let editedCompany = {
               id: this.addedOrUpdatedCompany.id,
               name: this.addedOrUpdatedCompany.name,
@@ -197,6 +198,9 @@ export default class AdminForm extends Vue{
                     location.reload();
                 })
                 .catch((error: any) => {
+                  if(error.response.status == 500){
+                    alert(error.response.data.message);
+                  }
                   console.log(error.response)
               });
           }
@@ -213,6 +217,9 @@ export default class AdminForm extends Vue{
           location.reload();
         })
         .catch((error: any) => {
+          if (error.response.status == 500){
+            alert(error.response.data.message);
+          }
           console.log(error.response)
       });
   }

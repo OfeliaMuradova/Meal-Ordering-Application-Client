@@ -29,7 +29,7 @@
               <th scope="col" class="col-2">{{ orderDetail.weekDay.day }}</th>
               <td scope="col" class="col-8"><input :disabled="!currentMenu" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
               <td scope="col" class="col-2">
-                <a v-if="currentMenu" :href="currentMenu" target="_blank"> Menu </a>  
+                <a v-if="currentMenu" :href="currentMenu.path" target="_blank"> Menu </a>  
                 <a v-else target="_blank"> No menu provided </a>  
               </td>
             </tr>
@@ -126,8 +126,7 @@ export default class UserOrder extends Vue{
 
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(route: any) {
-		if (route.name === 'order') { 
-      debugger;
+		if (route.name === 'order' || route.name === "adminOrder") { 
       //get an order for current week
       axios.get(constants.SERVERURL + '/orders/edit', {
         headers: constants.DEFAULT_HEADERS,
@@ -160,6 +159,7 @@ export default class UserOrder extends Vue{
 				}
         }).then( (response: any) => {
           this.currentMenu = response.data[0];
+          //this.currentMenu.path;
         })
         .catch((error: any) => {
           console.log(error.response)
@@ -206,14 +206,15 @@ export default class UserOrder extends Vue{
       //get the id of current order
       axios.get(constants.SERVERURL + '/orders/edit', {
         headers: constants.DEFAULT_HEADERS,
-        params: { week: "current" }
+        params: { week: this.week }
       }).then( (response: any) => {
+        debugger;
           this.weeklyOrder.id = response.data.id;
 
           //update order
           axios.put(constants.SERVERURL + '/orders/' + this.weeklyOrder.id, this.weeklyOrder, {
             headers: constants.DEFAULT_HEADERS,
-            params: { week: "current" }
+            params: { week: this.week }
           }).then( (response: any) => {
             window.location.reload();
           })

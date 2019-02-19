@@ -138,6 +138,9 @@ export default class Profile extends Vue{
         location.reload();
       })
       .catch((error: any) => {
+        if(error.response.status==500){
+          alert(error.response.data.message);
+        }
         console.log(error.response)
     }); 
   }
@@ -160,6 +163,9 @@ export default class Profile extends Vue{
           location.reload();
         })
         .catch((error: any) => {
+          if(error.response.status==500){
+            alert(error.response.data.message);
+          }
           console.log(error.response)
         }); 
       }

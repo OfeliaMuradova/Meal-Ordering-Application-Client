@@ -71,7 +71,7 @@
                     <td class="col-3 scrollable"><a :href="order.menu.path" target="_blank">{{ order.menu.path }}</a></td>
                     <td class="col-2 scrollable">{{ order.weekDay.day }}</td>
                     <td class="col-1" align="right">  
-                      <img class="imgConfirm" src="@/assets/checked.png" style="cursor: default;" @click="confirmOrder(order, order.id)">
+                      <img class="imgConfirm" src="@/assets/checked.png" style="cursor: default;" >
                     </td>
                   </tr>
                 </tbody>
@@ -181,7 +181,6 @@ export default class Orders extends Vue{
 
   @Watch('week')
   onChildChanged(val: string, oldVal: string) {
-    debugger;
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
@@ -189,7 +188,6 @@ export default class Orders extends Vue{
             week: this.week
           }
         }).then( (response: any) => {
-          debugger;
           this.updatedList = response.data;
         })
         .catch((error: any) => {

@@ -19,7 +19,7 @@
             <td v-if="menu.company" class="col-3 scrollable">{{ menu.company.name }}</td>
             <td class="col-1" align="right">  
               <img id="imgEdit" src="@/assets/edit1.png" data-toggle="modal" data-target="#addMenusModal" @click="prepareEdit(menu, menu.id)">
-              <img id="imgDelete" src="@/assets/delete.png" @click="deleteMenu(menu.id)">
+              <!-- <img id="imgDelete" src="@/assets/delete.png" @click="deleteMenu(menu.id)"> -->
             </td>
           </tr>
         </tbody>
