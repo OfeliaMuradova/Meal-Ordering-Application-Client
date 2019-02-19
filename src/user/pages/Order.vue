@@ -83,12 +83,10 @@ export default class UserOrder extends Vue{
   };
 
   get week(){
-    if(this.chosenWeek === "Current week"){
-      return 'current';
-    }
-    else if(this.chosenWeek === "Next week"){
+    if(this.chosenWeek === "Next week"){
       return 'next';
     }
+    else return 'current';
   }
 
   @Watch('week')
@@ -188,17 +186,14 @@ export default class UserOrder extends Vue{
   }
 
   private placeOrder(){
-    // console.log(this.weeklyOrder.orderDetails)
-    // this.weeklyOrder.orderDetails.forEach((orderDetail, index, arr)=>{
-    //   debugger;
-    //   if(orderDetail.orderStatus.name === "Confirmed"){   // || !orderDetail.orderText
-    //     arr.splice(index, 1);
-    //     console.log(this.weeklyOrder.orderDetails)
-    //   }
-    // });
+    let orderDetails: Array<OrderDetails> = [];
+        
+    this.weeklyOrder.orderDetails.forEach((orderDetail, index, arr)=>{
+      if(orderDetail.orderStatus != null && orderDetail.orderStatus.name !== "Confirmed")  // || !orderDetail.orderText
+        orderDetails.push(orderDetail);
+    });
 
-    console.log(this.weeklyOrder.orderDetails);
-
+    this.weeklyOrder.orderDetails = orderDetails;
     this.weeklyOrder.validFrom = this.currentMenu.validFrom;
     this.weeklyOrder.validTo = this.currentMenu.validTo;
     this.weeklyOrder.user = constants.getObjectCookie("user");
