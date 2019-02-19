@@ -9,15 +9,15 @@
               <form class="form-signin" method="post" action="login" >
                 <div class="form-label-group">
                   <label for="inputUsername">Username</label>
-                  <input type="text" id="inputUsername" ref="inputUsername" v-model="username" class="form-control" :data-state="usernameState" autofocus >  
+                  <input type="text" id="inputUsername" ref="inputUsername" v-model="username" @keyup.enter="login()" class="form-control" autofocus :data-state="usernameState">  
                   <label id="errorUsername" ref="errorUsername">Please enter a username!</label>
                 </div>
                 <div class="form-label-group">
                    <label for="inputPassword">Password</label>
-                   <input type="password" id="inputPassword" ref="inputPassword" v-model="password" class="form-control" :data-state="passwordState" > 
+                   <input type="password" id="inputPassword" ref="inputPassword" v-model="password" @keyup.enter="login()" class="form-control" :data-state="passwordState" > 
                    <label id="errorPassword" ref="errorPassword">Please enter a password!</label>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login" type="button">Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" v-on:click="login()" type="button">Sign in</button>
               </form>
             </div>
           </div>
@@ -111,6 +111,7 @@ export default class Login extends Vue{
         });
     }
   }
+
 
 }
 </script>

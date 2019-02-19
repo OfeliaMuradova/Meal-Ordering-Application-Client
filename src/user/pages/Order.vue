@@ -5,8 +5,8 @@
         <div class="heading">
           <h2>Place your order</h2>
 
-          <div class="dropdown float-right">
-            <select v-model="chosenWeek" class="form-control">
+          <div class="dropdown float-right" >
+            <select v-model="chosenWeek" ref="weekSelect" class="form-control">
               <option selected >Current week</option>
               <option>Next week</option>
             </select>
@@ -20,18 +20,22 @@
           <thead>
             <tr class="d-flex">
               <th scope="col" class="col-2"> </th>
-              <th scope="col" class="col-8">Order meals</th>
+              <th scope="col" class="col-6">Order meals</th>
               <th scope="col" class="col-2">Menu</th>
+              <th scope="col" class="col-2">Status</th>
             </tr>
           </thead>
           <tbody>
             <tr scope="row" class="d-flex" v-for="(orderDetail, index) in weeklyOrder.orderDetails" v-bind:key="index">
               <th scope="col" class="col-2">{{ orderDetail.weekDay.day }}</th>
-              <td scope="col" class="col-8"><input :disabled="!currentMenu" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
+              <td scope="col" v-if="orderDetail.orderStatus" class="col-6"><input :disabled="!currentMenu || orderDetail.orderStatus.name == 'Confirmed'" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
+              <td scope="col" v-else class="col-6"><input :disabled="!currentMenu" ref="monday" type="text" class="form-control" aria-describedby="meals" placeholder="Enter meal numbers" v-model="orderDetail.orderText"></td>
               <td scope="col" class="col-2">
-                <a v-if="currentMenu" :href="currentMenu.path" target="_blank"> Menu </a>  
+                <a v-if="currentMenu" :href="currentMenu.path" target="_blank"> Menu </a>
                 <a v-else target="_blank"> No menu provided </a>  
               </td>
+              <td v-if="orderDetail.orderStatus" scope="col" class="col-1">{{ orderDetail.orderStatus.name }}</td>
+              <td v-else scope="col" class="col-2"></td>
             </tr>
 
           </tbody>
@@ -77,14 +81,18 @@ export default class UserOrder extends Vue{
   };
 
   get week(){
-    if(this.chosenWeek === "Current week")
+    if(this.chosenWeek === "Current week"){
       return 'current';
-    if(this.chosenWeek === "Next week")
+    }
+    else if(this.chosenWeek === "Next week"){
       return 'next';
+    }
   }
 
   @Watch('week')
   onChildChanged(val: string, oldVal: string) {
+    constants.set_cookie("chosenWeek", this.chosenWeek);
+
     axios.get(constants.SERVERURL + '/orders/orderMenus', {
       headers: constants.DEFAULT_HEADERS,
       params: { week: val }
@@ -103,8 +111,16 @@ export default class UserOrder extends Vue{
     }).then( (response: any) => {
       if(response.data){
         this.action = 'edit';
-        this.weeklyOrder = response.data;
-        //sort
+        debugger;
+
+        this.weeklyOrder.orderDetails.forEach((orderDetail, index, ordersArray) => {
+            response.data.orderDetails.forEach((o: any) => {
+              if(orderDetail.weekDay.day === o.weekDay.day){
+                ordersArray[index] = o;
+              }
+            });
+          });
+
         this.sortByWeekDay(this.weeklyOrder.orderDetails);
       }else{
           this.action = 'add';
@@ -127,10 +143,12 @@ export default class UserOrder extends Vue{
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(route: any) {
 		if (route.name === 'order' || route.name === "adminOrder") { 
+      this.chosenWeek = constants.getCookie("chosenWeek");
+
       //get an order for current week
       axios.get(constants.SERVERURL + '/orders/edit', {
         headers: constants.DEFAULT_HEADERS,
-        params: { week: "current" }
+        params: { week: this.week }
       }).then( (response: any) => {
         if(response.data){
           this.action = 'edit';
@@ -155,11 +173,10 @@ export default class UserOrder extends Vue{
 			axios.get(constants.SERVERURL + '/orders/orderMenus', {
 				headers: constants.DEFAULT_HEADERS,
 				params: {
-					week: "current"
+					week: this.week
 				}
         }).then( (response: any) => {
           this.currentMenu = response.data[0];
-          //this.currentMenu.path;
         })
         .catch((error: any) => {
           console.log(error.response)
@@ -259,7 +276,7 @@ h2{
   position: relative;
   display: inline-block;
   width: 100%;
-  margin: 15px 0 5px 0;
+  margin: 0 0 5px 0;
 
   h2{
     float: left;

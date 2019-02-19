@@ -122,7 +122,13 @@ export default class AdminPanel extends Vue{
   }
 
 	private logout() {
-		try{
+    if(constants.getCookie("chosenWeek")){
+      constants.set_cookie("chosenWeek", "Current week");
+    }
+
+    console.log(constants.getCookie("chosenWeek"))
+    
+    try{
 			constants.delete_cookie('access_token');
 			this.$router.replace({ path: "/login" });
 		}
