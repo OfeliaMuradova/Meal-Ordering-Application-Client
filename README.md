@@ -1,4 +1,4 @@
-# Food Ordering Front
+# Meal Ordering Application 
 
 ## Project setup
 ```
