@@ -189,7 +189,7 @@ export default class UserOrder extends Vue{
     let orderDetails: Array<OrderDetails> = [];
         
     this.weeklyOrder.orderDetails.forEach((orderDetail, index, arr)=>{
-      if(orderDetail.orderStatus != null && orderDetail.orderStatus.name !== "Confirmed")  // || !orderDetail.orderText
+      if(orderDetail.id == null || orderDetail.orderStatus.name !== "Confirmed")  // || !orderDetail.orderText
         orderDetails.push(orderDetail);
     });
 
