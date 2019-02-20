@@ -111,7 +111,6 @@ export default class UserOrder extends Vue{
     }).then( (response: any) => {
       if(response.data){
         this.action = 'edit';
-        debugger;
 
         this.weeklyOrder.orderDetails.forEach((orderDetail, index, ordersArray) => {
             response.data.orderDetails.forEach((o: any) => {
@@ -222,6 +221,7 @@ export default class UserOrder extends Vue{
                 alert(error.response.data.message);
               }
               console.log(error.response)
+              window.location.reload();
           });
 
         })
@@ -250,6 +250,7 @@ export default class UserOrder extends Vue{
               alert(error.response.data.message);
             }
             console.log(error.response)
+            window.location.reload();
           });
 
       })

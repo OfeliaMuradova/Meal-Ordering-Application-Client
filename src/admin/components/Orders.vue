@@ -193,6 +193,10 @@ export default class Orders extends Vue{
         .catch((error: any) => {
           console.log(error.response)
       });
+
+      if (this.currentTab == "Confirmed"){
+        this.getOrderSummary();
+      }
    }
 
   private cancelOrder(order: Order){   
@@ -277,8 +281,7 @@ export default class Orders extends Vue{
   }
 
   private getConfirmedOrders(){
-    this.currentTab = "Confirmed";    
-
+    this.currentTab = "Confirmed";
     axios.get(constants.SERVERURL + '/admin/orders/list', {
         headers: constants.DEFAULT_HEADERS,
         params: {
