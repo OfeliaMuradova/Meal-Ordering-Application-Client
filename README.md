@@ -4,7 +4,8 @@
 
 ## Project Description 
 
-  The Meal Ordering Application Client is a Web Application Client, developed for the Community4you AG. It's an easy to use, convenient and simple application that aims to help the employees of the company to order and manage their meal plans for current and upcoming weeks. For the customer, this application provides a view of current food information and ordering logic on the website. For the administrator in the company, it offers a series of operations to add, update, delete and read the information of meals, companies, orders with their summary and employees.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Meal Ordering Application Client is a Web Application Client, developed for the Community4you AG. It's an easy to use, convenient and simple application that aims to help the employees of the company to order and manage their meal plans for current and upcoming weeks.   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For the customer, this application provides a view of current food information and ordering logic on the website. For the administrator in the company, it offers views for series of operations to add, update, delete and read the information of meals, companies, orders with their summary and employees.
 
 ## Project setup
 ```
