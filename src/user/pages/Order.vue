@@ -144,6 +144,9 @@ export default class UserOrder extends Vue{
 		if (route.name === 'order' || route.name === "adminOrder") { 
       this.chosenWeek = constants.getCookie("chosenWeek");
 
+      if(!this.chosenWeek)
+        this.chosenWeek = "Current week";
+
       //get an order for current week
       axios.get(constants.SERVERURL + '/orders/edit', {
         headers: constants.DEFAULT_HEADERS,

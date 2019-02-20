@@ -86,6 +86,7 @@ export default class Login extends Vue{
               constants.delete_cookie("access_token");
               constants.set_cookie("access_token", response.data.token);
               constants.set_cookie("user", JSON.stringify(this.user));
+              constants.set_cookie("chosenWeek", "Current week");
 
               if(this.user.userRole.name == "USER") {         
                 this.$router.replace({ name: "slider"});
