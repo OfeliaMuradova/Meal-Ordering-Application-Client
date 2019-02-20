@@ -1,5 +1,7 @@
 # Meal Ordering Application 
 
+![screenshot from 2019-02-20 09-44-05](https://user-images.githubusercontent.com/16364918/53086943-585bd500-3506-11e9-9189-a75492741fce.png)
+
 ## Project setup
 ```
 npm install
@@ -28,4 +30,4 @@ npm run lint
 
 ![screenshot from 2019-02-20 09-50-01](https://user-images.githubusercontent.com/16364918/53086940-585bd500-3506-11e9-85a6-575a89ca1442.png)
 ![screenshot from 2019-02-20 09-46-22](https://user-images.githubusercontent.com/16364918/53086941-585bd500-3506-11e9-8231-627f40074a3a.png)
-![screenshot from 2019-02-20 09-44-05](https://user-images.githubusercontent.com/16364918/53086943-585bd500-3506-11e9-9189-a75492741fce.png)
+
