@@ -31,8 +31,5 @@ npm run test
 ```
 npm run lint
 ```
-### Example screenshots
 
-![screenshot from 2019-02-20 09-46-22](https://user-images.githubusercontent.com/16364918/53086941-585bd500-3506-11e9-8231-627f40074a3a.png)
-![screenshot from 2019-02-20 09-50-01](https://user-images.githubusercontent.com/16364918/53087497-a3c2b300-3507-11e9-8521-153e2d0a09b6.png)
 
